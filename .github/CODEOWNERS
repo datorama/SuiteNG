@@ -1,3 +1,4 @@
+* @datorama/automation-infra
 # This file can be modified by tmp-leadership or devops teams only #
 /.github/CODEOWNERS @datorama/tmp-leadership @datorama/devops
 
