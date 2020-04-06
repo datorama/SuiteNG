@@ -32,12 +32,9 @@ public class FilesScanner {
 
 		Map<String, List<String>> resultMap = new HashMap<>(); // contains all test methods per classname
 
-		try (Stream<Path> walk = Files.walk(Paths.get(directoryPath))) {
+		try (Stream<Path> walk = Files.walk(Paths.get(directoryPath)).collect(Collectors.toList()).parallelStream()) {
 
-			List<String> filesScannerResult = walk.map(x -> x.toString())
-					.filter(f -> f.endsWith(fileExtension)).collect(Collectors.toList());
-
-			filesScannerResult.forEach(classname -> {
+			walk.map(x -> x.toString()).filter(f -> f.endsWith(fileExtension)).collect(Collectors.toList()).parallelStream().forEach(classname -> {
 				log.debug("File absolute path: " + classname);
 				classname = getFileCanonicalPathFromAbsolutePath(classname, directoryPath);
 				log.debug("File canonical path: " + classname);
