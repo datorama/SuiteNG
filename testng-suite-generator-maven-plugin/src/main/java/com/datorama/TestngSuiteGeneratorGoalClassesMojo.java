@@ -14,7 +14,7 @@ import org.testng.xml.XmlClass;
 /**
  * This goal will generate TestNG suite file with classes.
  */
-@Mojo(name = "testng-generate-with-classes", defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "testng-generate-with-classes", defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES)
 public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGeneratorMojo {
 
 	@Override
