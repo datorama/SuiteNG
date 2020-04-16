@@ -19,14 +19,15 @@ public class DependencyScanner {
 		this.dir = basedir;
 	}
 
-	public void scan() {
+	public List<String> scan() {
 
 		final String mavenDependencyPluginCommand = "mvn dependency:build-classpath";
 		buffer = Utils.execCommand(mavenDependencyPluginCommand, new String[] {}, dir, log);
 		log.debug("Dependency build-classpath command: " + buffer);
+		return getBuildClasspathElements();
 	}
 
-	public List<String> getBuildClasspathElements() {
+	private List<String> getBuildClasspathElements() {
 
 		final String CLASSPATH_ELEMENTS_SEPERATOR = ":";
 

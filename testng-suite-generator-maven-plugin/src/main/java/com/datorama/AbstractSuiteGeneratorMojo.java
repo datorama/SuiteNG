@@ -165,9 +165,9 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	}
 
 	protected List<String> getProjectAdditionalClasspathElements() {
+
 		DependencyScanner dependencyScanner = new DependencyScanner(new File(basedir), getLog());
-		dependencyScanner.scan();
-		List<String> additionalClasspathElements = dependencyScanner.getBuildClasspathElements();
+		List<String> additionalClasspathElements = dependencyScanner.scan();
 		additionalClasspathElements.add(basedir + testClassesDirectory);
 		additionalClasspathElements.add(basedir + classesDirectory);
 
