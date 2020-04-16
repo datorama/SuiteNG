@@ -122,7 +122,7 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
 	public abstract void generate();
 
-	protected URLClassLoader setPluginClasspath(String[] additionalClasspathElements) {
+	protected URLClassLoader setPluginClasspath(List<String> additionalClasspathElements) {
 
 		pluginDescriptor = (PluginDescriptor) getPluginContext().get("pluginDescriptor");
 		final ClassRealm classRealm = pluginDescriptor.getClassRealm();
@@ -162,5 +162,15 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		URLClassLoader urlClassLoader = new URLClassLoader(classRealm.getURLs(), classRealm);
 
 		return urlClassLoader;
+	}
+
+	protected List<String> getProjectAdditionalClasspathElements() {
+		DependencyScanner dependencyScanner = new DependencyScanner(new File(basedir), getLog());
+		dependencyScanner.scan();
+		List<String> additionalClasspathElements = dependencyScanner.getBuildClasspathElements();
+		additionalClasspathElements.add(basedir + testClassesDirectory);
+		additionalClasspathElements.add(basedir + classesDirectory);
+
+		return additionalClasspathElements;
 	}
 }

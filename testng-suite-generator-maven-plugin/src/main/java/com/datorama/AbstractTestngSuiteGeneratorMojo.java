@@ -31,7 +31,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		setSuiteGlobalConfiguration();
 
-		urlClassLoader = setPluginClasspath(new String[] { basedir + testClassesDirectory, basedir + classesDirectory });
+		urlClassLoader = setPluginClasspath(getProjectAdditionalClasspathElements());
 	}
 
 	protected void setSuiteGlobalConfiguration() {
