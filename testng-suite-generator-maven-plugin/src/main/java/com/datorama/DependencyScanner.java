@@ -22,7 +22,7 @@ public class DependencyScanner {
 	public List<String> scan() {
 
 		final String mavenDependencyPluginCommand = "mvn dependency:build-classpath";
-		buffer = Utils.execCommand(mavenDependencyPluginCommand, new String[] {}, dir, log);
+		buffer = Commander.executeCommand(mavenDependencyPluginCommand, new String[] {}, dir, log);
 		log.debug("Dependency build-classpath command: " + buffer);
 		return getBuildClasspathElements();
 	}

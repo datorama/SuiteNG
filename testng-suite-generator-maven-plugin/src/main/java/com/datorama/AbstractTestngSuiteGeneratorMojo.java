@@ -59,7 +59,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		//Create XML file based on the virtual XML content
 		suitesList.forEach(xmlSuite -> {
-			Utils.writeFile(basedir + suiteRelativePath, xmlSuite.toXml(), getLog());
+			FileUtils.writeFile(basedir + suiteRelativePath, xmlSuite.toXml(), getLog());
 		});
 	}
 }
