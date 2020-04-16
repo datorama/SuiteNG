@@ -16,13 +16,13 @@ public class Utils {
 
 	public static String execCommand(String command, String[] envParameters, File dir, Log log) {
 
-		Runtime rt = Runtime.getRuntime();
-		Process pr;
+		Runtime runtime = Runtime.getRuntime();
+		Process process;
 		String buffer = null;
 
 		try {
-			pr = rt.exec(command, envParameters, dir);
-			buffer = new BufferedReader(new InputStreamReader(pr.getInputStream())).lines()
+			process = runtime.exec(command, envParameters, dir);
+			buffer = new BufferedReader(new InputStreamReader(process.getInputStream())).lines()
 					.parallel().collect(Collectors.joining(System.lineSeparator()));
 		} catch (IOException e) {
 			log.error(e);
