@@ -10,6 +10,8 @@ import org.apache.maven.plugin.logging.Log;
 
 public class DependencyScanner {
 
+	final String ELEMENTS_SEPERATOR = ":";
+
 	private Log log;
 	private File dir;
 	private String buffer = "";
@@ -21,18 +23,20 @@ public class DependencyScanner {
 
 	public List<String> scan() {
 
-		final String mavenDependencyPluginCommand = "mvn dependency:build-classpath";
-		buffer = Commander.executeCommand(mavenDependencyPluginCommand, new String[] {}, dir, log);
+		final String mavenCommand = "mvn ";
+		final String mavenPlugin = "dependency";
+		final String mavenGoal = "build-classpath";
+
+		buffer = Commander.executeCommand(mavenCommand + mavenPlugin + ELEMENTS_SEPERATOR + mavenGoal, new String[] {}, dir, log);
 		log.debug("Dependency build-classpath command: " + buffer);
+
 		return getBuildClasspathElements();
 	}
 
 	private List<String> getBuildClasspathElements() {
 
-		final String CLASSPATH_ELEMENTS_SEPERATOR = ":";
-
 		String buildClasspathLine = parseBuildClasspathLine(buffer);
-		List<String> buildClasspathElements = Arrays.stream(buildClasspathLine.split(CLASSPATH_ELEMENTS_SEPERATOR)).collect(Collectors.toList());
+		List<String> buildClasspathElements = Arrays.stream(buildClasspathLine.split(ELEMENTS_SEPERATOR)).collect(Collectors.toList());
 
 		buildClasspathElements.forEach(element -> log.debug("Dependencies classpath: " + element));
 
