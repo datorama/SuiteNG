@@ -35,6 +35,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 	}
 
 	protected void setSuiteGlobalConfiguration() {
+
 		XmlSuite.ParallelMode enumParallelMode = XmlSuite.ParallelMode.getValidParallel(parallelMode);
 		topLevelSuite.setParallel(enumParallelMode);
 		topLevelSuite.setThreadCount(threadCount);
@@ -46,6 +47,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 	}
 
 	protected void setSuiteTopLevelPostConfiguration() {
+
 		//Create a list of XmlTests
 		List<XmlTest> testsList = new ArrayList<>();
 		testsList.add(topLevelTest);

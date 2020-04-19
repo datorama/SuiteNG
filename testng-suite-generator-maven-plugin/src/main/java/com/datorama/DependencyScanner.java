@@ -1,12 +1,12 @@
 package com.datorama;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.maven.plugin.logging.Log;
+
+import com.google.common.base.Splitter;
 
 public class DependencyScanner {
 
@@ -36,8 +36,7 @@ public class DependencyScanner {
 	private List<String> getBuildClasspathElements() {
 
 		String buildClasspathLine = parseBuildClasspathLine(buffer);
-		List<String> buildClasspathElements = Arrays.stream(buildClasspathLine.split(ELEMENTS_SEPERATOR)).collect(Collectors.toList());
-
+		List<String> buildClasspathElements = Splitter.on(ELEMENTS_SEPERATOR).omitEmptyStrings().trimResults().splitToList(buildClasspathLine);
 		buildClasspathElements.forEach(element -> log.debug("Dependencies classpath: " + element));
 
 		return buildClasspathElements;
@@ -48,7 +47,6 @@ public class DependencyScanner {
 		final String DEPENDENCIES_CLASSPATH_PREFIX = "Dependencies classpath:";
 
 		String[] textLines = text.split(System.lineSeparator());
-
 		String buildClasspathLine = IntStream.range(1, textLines.length)
 				.filter(i -> textLines[i - 1].contains(DEPENDENCIES_CLASSPATH_PREFIX))
 				.mapToObj(i -> textLines[i]).findFirst().orElse("");
