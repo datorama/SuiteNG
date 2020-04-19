@@ -1,7 +1,5 @@
 package com.datorama;
 
-
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +19,7 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 	@Override
 	public void generate() {
 		setSuiteTopLevelPreConfiguration();
-
 		setTestIncludeMethods(getTestMethodsPerClass());
-
 		setSuiteTopLevelPostConfiguration();
 	}
 

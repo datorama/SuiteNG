@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 
 import org.apache.maven.plugin.logging.Log;
 
-public class Utils {
+public class FileUtils {
 
 	public static void writeFile(String pathname, String content, Log log) {
 

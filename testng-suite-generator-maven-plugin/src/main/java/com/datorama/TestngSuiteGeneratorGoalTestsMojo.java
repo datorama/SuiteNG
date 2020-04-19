@@ -20,9 +20,7 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 	@Override
 	public void generate() {
 		setSuiteTopLevelPreConfiguration();
-
 		setTestIncludeMethods(getTestMethodsPerClass());
-
 		setSuiteTopLevelPostConfiguration();
 	}
 
@@ -36,7 +34,6 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 	private void setTestIncludeMethods(Map<String, List<String>> methodNamesByClassNameMap) {
 
 		List<XmlClass> classes = new ArrayList<>();
-
 		methodNamesByClassNameMap.forEach((className, methods) -> {
 			methods.forEach(method -> {
 				XmlClass xmlClass = new XmlClass(className);
@@ -47,8 +44,6 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 				classes.add(xmlClass);
 			});
 		});
-
 		topLevelTest.setXmlClasses(classes);
 	}
-
 }

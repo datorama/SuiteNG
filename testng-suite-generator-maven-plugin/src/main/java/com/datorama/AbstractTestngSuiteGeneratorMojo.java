@@ -31,10 +31,11 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		setSuiteGlobalConfiguration();
 
-		urlClassLoader = setPluginClasspath(new String[] { basedir + testClassesDirectory, basedir + classesDirectory });
+		urlClassLoader = setPluginClasspath(getProjectAdditionalClasspathElements());
 	}
 
 	protected void setSuiteGlobalConfiguration() {
+
 		XmlSuite.ParallelMode enumParallelMode = XmlSuite.ParallelMode.getValidParallel(parallelMode);
 		topLevelSuite.setParallel(enumParallelMode);
 		topLevelSuite.setThreadCount(threadCount);
@@ -46,6 +47,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 	}
 
 	protected void setSuiteTopLevelPostConfiguration() {
+
 		//Create a list of XmlTests
 		List<XmlTest> testsList = new ArrayList<>();
 		testsList.add(topLevelTest);
@@ -59,7 +61,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		//Create XML file based on the virtual XML content
 		suitesList.forEach(xmlSuite -> {
-			Utils.writeFile(basedir + suiteRelativePath, xmlSuite.toXml(), getLog());
+			FileUtils.writeFile(basedir + suiteRelativePath, xmlSuite.toXml(), getLog());
 		});
 	}
 }
