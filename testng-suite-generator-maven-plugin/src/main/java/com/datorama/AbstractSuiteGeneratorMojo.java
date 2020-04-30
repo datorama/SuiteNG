@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -167,7 +169,7 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	protected List<String> getProjectAdditionalClasspathElements() {
 
 		DependencyScanner dependencyScanner = new DependencyScanner(new File(basedir), getLog());
-		List<String> additionalClasspathElements = dependencyScanner.scan();
+		List<String> additionalClasspathElements = new ArrayList<>(dependencyScanner.scan());
 		additionalClasspathElements.add(basedir + testClassesDirectory);
 		additionalClasspathElements.add(basedir + classesDirectory);
 
