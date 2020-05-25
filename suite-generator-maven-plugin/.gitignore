@@ -3,3 +3,4 @@
 /logs/
 .idea
 *.iml
+/.java-version
