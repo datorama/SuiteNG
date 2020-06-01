@@ -24,12 +24,8 @@ suite-generator:testng-generate-with-tests
 
 ## Usage
 
-Add dependecny in pom file:
+Add dependecny in pom file with configuration:
 ```
-<plugin>
-
-</plugin>
-
 <project>
   ...
   <build>
