@@ -22,8 +22,6 @@ suite-generator:testng-generate-with-tests
   This goal will generate TestNG suite file with included methods.
 ```
 
-NOTE: Currently only suite files for TestNG framework supported
-
 ## Usage
 
 Add dependecny in pom file:
@@ -34,7 +32,9 @@ Add dependecny in pom file:
   <version>1.0.0</version>
 </plugin>
 ```
-##  Available parameters:
+
+##  Available parameters
+
 ```
     basedir (Default: ${project.basedir}/)
       The project base directory path.
@@ -98,9 +98,15 @@ Add dependecny in pom file:
       User property: verbose
 ```
 
+## Notes
+
+* Currently only suite files for TestNG framework supported
+* Project should include dependency of maven-surefire-plugin
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
+
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
