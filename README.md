@@ -27,10 +27,28 @@ suite-generator:testng-generate-with-tests
 Add dependecny in pom file:
 ```
 <plugin>
-  <groupId>com.datorama</groupId>
-  <artifactId>suite-generator-maven-plugin</artifactId>
-  <version>1.0.0</version>
+
 </plugin>
+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.datorama</groupId>
+        <artifactId>suite-generator-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <isPreserveOrder>...</isPreserveOrder>
+          <parallelMode>...</parallelMode>
+          <verbose>...</verbose>
+          ...
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
 ```
 
 ##  Available parameters
