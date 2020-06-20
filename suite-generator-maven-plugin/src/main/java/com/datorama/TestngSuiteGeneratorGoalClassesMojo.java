@@ -14,6 +14,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;
+import org.testng.xml.XmlTest;
 
 /**
  * This goal will generate TestNG suite file with classes.
@@ -30,12 +31,18 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	private void setTestClasses() {
 
+		XmlTest xmlTest = new XmlTest(topLevelSuite);
+		xmlTest.setName(testName);
+
 		List<XmlClass> classesList = new ArrayList<>();
 		Set<String> classNames = getTestsClassNames();
 		classNames.forEach(className -> {
 			classesList.add(new XmlClass(className, false));
 		});
-		topLevelTest.setXmlClasses(classesList);
+
+		xmlTest.setXmlClasses(classesList);
+
+		topLevelTestsList.add(xmlTest);
 	}
 
 	private Set<String> getTestsClassNames() {
