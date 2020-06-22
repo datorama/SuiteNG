@@ -123,4 +123,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## License
 
-[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+[New BSD License](https://opensource.org/licenses/BSD-3-Clause)
