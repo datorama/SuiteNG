@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.xml.XmlPackage;
+import org.testng.xml.XmlTest;
 
 /**
  * This goal will generate TestNG suite file with packages.
@@ -28,9 +29,14 @@ public class TestngSuiteGeneratorGoalPackagesMojo extends AbstractTestngSuiteGen
 
 	private void setTestsPackage() {
 
+		XmlTest xmlTest = new XmlTest(topLevelSuite);
+		xmlTest.setName(testName);
+
 		List<XmlPackage> packagesList = new ArrayList<>();
 		packagesList.add(new XmlPackage(testsPackageName));
-		topLevelTest.setXmlPackages(packagesList);
+		xmlTest.setXmlPackages(packagesList);
+
+		topLevelTestsList.add(xmlTest);
 	}
 
 }

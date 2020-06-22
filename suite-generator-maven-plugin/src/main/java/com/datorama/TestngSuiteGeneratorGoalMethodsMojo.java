@@ -15,6 +15,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
+import org.testng.xml.XmlTest;
 
 /**
  * This goal will generate TestNG suite file with included methods.
@@ -38,6 +39,9 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 
 	private void setTestIncludeMethods(Map<String, List<String>> methodNamesByClassNameMap) {
 
+		XmlTest xmlTest = new XmlTest(topLevelSuite);
+		xmlTest.setName(testName);
+
 		List<XmlClass> classes = new ArrayList<>();
 
 		methodNamesByClassNameMap.forEach((className, methods) -> {
@@ -51,7 +55,9 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 			classes.add(xmlClass);
 		});
 
-		topLevelTest.setXmlClasses(classes);
+		xmlTest.setXmlClasses(classes);
+
+		topLevelTestsList.add(xmlTest);
 	}
 
 }

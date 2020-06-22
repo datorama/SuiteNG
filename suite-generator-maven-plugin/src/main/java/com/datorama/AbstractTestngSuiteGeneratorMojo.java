@@ -19,7 +19,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 	protected URLClassLoader urlClassLoader;
 	protected XmlSuite topLevelSuite;
-	protected XmlTest topLevelTest;
+	protected List<XmlTest> topLevelTestsList;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -31,9 +31,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		topLevelSuite = new XmlSuite();
 		topLevelSuite.setName(suiteName);
 
-		//Create an instance of XmlTest and assign a name
-		topLevelTest = new XmlTest(topLevelSuite);
-		topLevelTest.setName(testName);
+		topLevelTestsList = new ArrayList<>();
 
 		setSuiteGlobalConfiguration();
 
@@ -54,12 +52,8 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 	protected void setSuiteTopLevelPostConfiguration() {
 
-		//Create a list of XmlTests
-		List<XmlTest> testsList = new ArrayList<>();
-		testsList.add(topLevelTest);
-
 		//Assign tests list to suite
-		topLevelSuite.setTests(testsList);
+		topLevelSuite.setTests(topLevelTestsList);
 
 		//Add the suite to the list of suites.
 		List<XmlSuite> suitesList = new ArrayList<>();
