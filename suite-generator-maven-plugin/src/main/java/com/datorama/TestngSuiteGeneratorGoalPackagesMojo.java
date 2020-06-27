@@ -22,21 +22,18 @@ public class TestngSuiteGeneratorGoalPackagesMojo extends AbstractTestngSuiteGen
 
 	@Override
 	public void generate() {
-		setSuiteTopLevelPreConfiguration();
 		setTestsPackage();
-		setSuiteTopLevelPostConfiguration();
 	}
 
 	private void setTestsPackage() {
 
 		XmlTest xmlTest = new XmlTest(topLevelSuite);
-		xmlTest.setName(testName);
+		xmlTest.setName(getTestName());
 
 		List<XmlPackage> packagesList = new ArrayList<>();
-		packagesList.add(new XmlPackage(testsPackageName));
+		packagesList.add(new XmlPackage(getTestsPackageName()));
 		xmlTest.setXmlPackages(packagesList);
 
 		topLevelTestsList.add(xmlTest);
 	}
-
 }

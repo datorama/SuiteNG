@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlTest;
 
@@ -24,33 +23,31 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	@Override
 	public void generate() {
-		setSuiteTopLevelPreConfiguration();
 		setTestClasses();
-		setSuiteTopLevelPostConfiguration();
 	}
 
 	private void setTestClasses() {
 
 		XmlTest xmlTest = new XmlTest(topLevelSuite);
-		xmlTest.setName(testName);
+		xmlTest.setName(getTestName());
 
-		List<XmlClass> classesList = new ArrayList<>();
-		Set<String> classNames = getTestsClassNames();
-		classNames.forEach(className -> {
-			classesList.add(new XmlClass(className, false));
+		List<XmlClass> xmlClassesList = new ArrayList<>();
+		Set<Class<?>> classes = getTestsClasses();
+		classes.forEach(clazz -> {
+			xmlClassesList.add(new XmlClass(clazz, false));
 		});
 
-		xmlTest.setXmlClasses(classesList);
+		xmlTest.setXmlClasses(xmlClassesList);
 
 		topLevelTestsList.add(xmlTest);
 	}
 
-	private Set<String> getTestsClassNames() {
+	private Set<Class<?>> getTestsClasses() {
 
 		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
-		Set<String> classNames = scanner.scanFilesMethodsWithAnnotations(basedir + testClassesDirectory, Test.class, ".class").keySet();
+		scanner.scan(getBasedir() + getTestClassesDirectory());
+		Set<Class<?>> classNames = scanner.getResultsFilteredByTestAnnotation(buildFiltersByIncludedGroups()).keySet();
 
 		return classNames;
 	}
-
 }

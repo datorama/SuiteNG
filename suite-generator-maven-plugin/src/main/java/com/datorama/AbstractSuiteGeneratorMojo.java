@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -42,93 +41,92 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 * The project base directory path.
 	 */
 	@Parameter(property = "project.basedir", defaultValue = "${project.basedir}/")
-	protected String basedir;
+	private String basedir;
 
 	/**
 	 * The path to tests classes directory in project.
 	 */
 	@Parameter(property = "classes.directory", defaultValue = "target/classes/")
-	protected String classesDirectory;
+	private String classesDirectory;
 
 	/**
 	 * The path to tests classes directory in project.
 	 */
 	@Parameter(property = "test.classes.directory", defaultValue = "target/test-classes/")
-	protected String testClassesDirectory;
+	private String testClassesDirectory;
 
 	/**
 	 * The tests package name.
 	 */
 	@Parameter(property = "tests.package.name", defaultValue = "com.**")
-	protected String testsPackageName;
+	private String testsPackageName;
 
 	/**
 	 * The destination path (including filename) of the xml file.
 	 */
 	@Parameter(property = "suite.relative.path", defaultValue = "src/test/resources/suite.xml")
-	protected String suiteRelativePath;
+	private String suiteRelativePath;
 
 	/**
 	 * The suite name to configure in xml file.
 	 */
 	@Parameter(property = "suite.name", defaultValue = "default")
-	protected String suiteName;
+	private String suiteName;
 
 	/**
 	 * The test name parameter to configure in xml file.
 	 */
 	@Parameter(property = "test.name", defaultValue = "default")
-	protected String testName;
+	private String testName;
 
 	/**
 	 * The parallel mode to configure in xml file.
 	 */
 	@Parameter(property = "parallel.mode", defaultValue = "none")
-	protected String parallelMode;
+	private String parallelMode;
 
 	/**
 	 * The thread count to configure in xml file (NOTE: ignored if parallel mode = "none").
 	 */
 	@Parameter(property = "thread.count", defaultValue = "1")
-	protected int threadCount;
+	private int threadCount;
 
 	/**
 	 * The timeout to configure in xml file.
 	 */
 	@Parameter(property = "timeout")
-	protected String timeout;
+	private String timeout;
 
 	/**
 	 * The verbose level to configure in xml file.
 	 */
 	@Parameter(property = "verbose")
-	protected int verbose;
+	private int verbose;
 
 	/**
 	 * The preserve order to configure in xml file.
 	 */
 	@Parameter(property = "preserve.order")
-	protected boolean isPreserveOrder;
+	private boolean isPreserveOrder;
 
 	/**
 	 * The listeners to configure in xml file.
 	 */
 	@Parameter(property = "listeners")
-	protected List listeners;
+	private List listeners;
 
 	/**
 	 * The excluded groups to configure in xml file.
 	 */
 	@Parameter(property = "excluded.groups")
-	protected List excludedGroups;
+	private List<String> excludedGroups;
 
 	/**
 	 * The included groups to configure in xml file.
 	 */
 	@Parameter(property = "included.groups")
-	protected List includedGroups;
+	private List<String> includedGroups;
 
-	public abstract void generate();
 
 	protected URLClassLoader setPluginClasspath(List<String> additionalClasspathElements) {
 
@@ -174,11 +172,138 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
 	protected List<String> getProjectAdditionalClasspathElements() {
 
-		DependencyScanner dependencyScanner = new DependencyScanner(new File(basedir), getLog());
+		DependencyScanner dependencyScanner = new DependencyScanner(new File(getBasedir()), getLog());
 		List<String> additionalClasspathElements = new ArrayList<>(dependencyScanner.scan());
-		additionalClasspathElements.add(basedir + testClassesDirectory);
-		additionalClasspathElements.add(basedir + classesDirectory);
+		additionalClasspathElements.add(getBasedir() + getTestClassesDirectory());
+		additionalClasspathElements.add(getBasedir() + getClassesDirectory());
 
 		return additionalClasspathElements;
+	}
+
+	private String validatePathEndsWithFileSeparator(String path) {
+		return (path.endsWith(File.separator))? path : (path + File.separator);
+	}
+
+	public String getBasedir() {
+		setBasedir(validatePathEndsWithFileSeparator(basedir));
+		return basedir;
+	}
+
+	public void setBasedir(String basedir) {
+		this.basedir = basedir;
+	}
+
+	public String getClassesDirectory() {
+		setClassesDirectory(validatePathEndsWithFileSeparator(classesDirectory));
+		return classesDirectory;
+	}
+
+	public void setClassesDirectory(String classesDirectory) {
+		this.classesDirectory = classesDirectory;
+	}
+
+	public String getTestClassesDirectory() {
+		setTestClassesDirectory(validatePathEndsWithFileSeparator(testClassesDirectory));
+		return testClassesDirectory;
+	}
+
+	public void setTestClassesDirectory(String testClassesDirectory) {
+		this.testClassesDirectory = testClassesDirectory;
+	}
+
+	public String getTestsPackageName() {
+		return testsPackageName;
+	}
+
+	public void setTestsPackageName(String testsPackageName) {
+		this.testsPackageName = testsPackageName;
+	}
+
+	public String getSuiteRelativePath() {
+		return suiteRelativePath;
+	}
+
+	public void setSuiteRelativePath(String suiteRelativePath) {
+		this.suiteRelativePath = suiteRelativePath;
+	}
+
+	public String getSuiteName() {
+		return suiteName;
+	}
+
+	public void setSuiteName(String suiteName) {
+		this.suiteName = suiteName;
+	}
+
+	public String getTestName() {
+		return testName;
+	}
+
+	public void setTestName(String testName) {
+		this.testName = testName;
+	}
+
+	public String getParallelMode() {
+		return parallelMode;
+	}
+
+	public void setParallelMode(String parallelMode) {
+		this.parallelMode = parallelMode;
+	}
+
+	public int getThreadCount() {
+		return threadCount;
+	}
+
+	public void setThreadCount(int threadCount) {
+		this.threadCount = threadCount;
+	}
+
+	public String getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(String timeout) {
+		this.timeout = timeout;
+	}
+
+	public int getVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(int verbose) {
+		this.verbose = verbose;
+	}
+
+	public boolean isPreserveOrder() {
+		return isPreserveOrder;
+	}
+
+	public void setPreserveOrder(boolean preserveOrder) {
+		isPreserveOrder = preserveOrder;
+	}
+
+	public List getListeners() {
+		return listeners;
+	}
+
+	public void setListeners(List listeners) {
+		this.listeners = listeners;
+	}
+
+	public List<String> getExcludedGroups() {
+		return excludedGroups;
+	}
+
+	public void setExcludedGroups(List<String> excludedGroups) {
+		this.excludedGroups = excludedGroups;
+	}
+
+	public List<String> getIncludedGroups() {
+		return includedGroups;
+	}
+
+	public void setIncludedGroups(List<String> includedGroups) {
+		this.includedGroups = includedGroups;
 	}
 }

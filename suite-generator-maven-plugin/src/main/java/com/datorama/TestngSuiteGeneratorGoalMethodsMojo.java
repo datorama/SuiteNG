@@ -6,13 +6,14 @@
  */
 package com.datorama;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
@@ -25,30 +26,21 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 
 	@Override
 	public void generate() {
-		setSuiteTopLevelPreConfiguration();
 		setTestIncludeMethods(getTestMethodsPerClass());
-		setSuiteTopLevelPostConfiguration();
 	}
 
-	private Map<String, List<String>> getTestMethodsPerClass() {
-
-		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
-
-		return scanner.scanFilesMethodsWithAnnotations(basedir + testClassesDirectory, Test.class, ".class");
-	}
-
-	private void setTestIncludeMethods(Map<String, List<String>> methodNamesByClassNameMap) {
+	private void setTestIncludeMethods(Map<Class<?>, List<Method>> methodsPerClassMap) {
 
 		XmlTest xmlTest = new XmlTest(topLevelSuite);
-		xmlTest.setName(testName);
+		xmlTest.setName(getTestName());
 
 		List<XmlClass> classes = new ArrayList<>();
 
-		methodNamesByClassNameMap.forEach((className, methods) -> {
-			XmlClass xmlClass = new XmlClass(className);
+		methodsPerClassMap.forEach((clazz, methods) -> {
+			XmlClass xmlClass = new XmlClass(clazz);
 			List<XmlInclude> xmlIncludeMethods = new ArrayList<>();
 			methods.forEach(method -> {
-				XmlInclude include = new XmlInclude(method);
+				XmlInclude include = new XmlInclude(method.getName());
 				xmlIncludeMethods.add(include);
 			});
 			xmlClass.setIncludedMethods(xmlIncludeMethods);
@@ -60,4 +52,11 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 		topLevelTestsList.add(xmlTest);
 	}
 
+	private Map<Class<?>, List<Method>> getTestMethodsPerClass() {
+
+		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
+		scanner.scan(getBasedir() + getTestClassesDirectory());
+scanner.getRawResults();
+		return scanner.getResultsFilteredByTestAnnotation(buildFiltersByIncludedGroups());
+	}
 }
