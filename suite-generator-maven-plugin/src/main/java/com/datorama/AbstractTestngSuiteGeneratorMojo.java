@@ -57,6 +57,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		topLevelSuite.setIncludedGroups(getIncludedGroups());
 		topLevelSuite.setTimeOut(getTimeout());
 		topLevelSuite.setPreserveOrder(isPreserveOrder());
+		topLevelSuite.setVerbose(getVerbose());
 	}
 
 	protected void setSuiteTopLevelPostConfiguration() {
