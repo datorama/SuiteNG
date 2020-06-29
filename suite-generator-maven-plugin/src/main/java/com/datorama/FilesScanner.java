@@ -75,11 +75,7 @@ public class FilesScanner {
 	}
 
 	public Map<Class<?>, List<Method>> getRawResults() {
-
-		log.debug("Scan All results:");
-		log.debug("Number of All classes " + scanResultsMap.keySet().size());
-		log.debug("All Classes:" + scanResultsMap.keySet().toString());
-		log.debug("All Methods:" + Arrays.toString(scanResultsMap.values().toArray()));
+		log.debug("Number of classes found in scan: " + scanResultsMap.keySet().size());
 		return scanResultsMap;
 	}
 
@@ -99,11 +95,7 @@ public class FilesScanner {
 			}
 		});
 
-		log.debug("Scan filtered by TestNG @Test with Attributes results:");
-		log.debug("Number of Filtered classes " + filteredMap.keySet().size());
-		log.debug("Filtered Classes:" + filteredMap.keySet().toString());
-		log.debug("Filtered Methods:" + Arrays.toString(filteredMap.values().toArray()));
-
+		log.debug("Number of classes found after filters applied: " + filteredMap.keySet().size());
 		return filteredMap;
 	}
 
