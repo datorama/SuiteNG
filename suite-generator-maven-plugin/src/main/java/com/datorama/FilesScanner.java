@@ -146,7 +146,7 @@ public class FilesScanner {
 					try {
 						if (expectedAnnotationAttributes.containsKey(methodItr.getName())) {
 							String expectedValue = expectedAnnotationAttributes.get(methodItr.getName());
-							Object objActualValue = method.invoke(annotation, new Object[0]);
+							Object objActualValue = methodItr.invoke(annotation, new Object[0]);
 
 							if (objActualValue instanceof Class) {
 								if (StringUtils.equals(expectedValue, objActualValue.toString())) {
