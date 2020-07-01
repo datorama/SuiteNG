@@ -25,7 +25,6 @@ import org.apache.maven.plugin.logging.Log;
 
 public class FilesScanner {
 
-	private static final String DOT_CHARACTER = ".";
 	private static final String DEFAULT_FILE_EXTENSION = ".class";
 
 	private Log log;
@@ -45,16 +44,12 @@ public class FilesScanner {
 
 		scanResultsMap.clear();
 		try (Stream<Path> walk = Files.walk(Paths.get(directoryPath)).collect(Collectors.toList()).parallelStream()) {
-
 			walk.map(x -> x.toString()).filter(f -> f.endsWith(fileExtension)).collect(Collectors.toList()).parallelStream().forEach(filename -> {
-				log.debug("File absolute path: " + filename);
 				String classname = convertFileAbsolutePathToClassCanonicalName(filename, directoryPath, fileExtension);
-				log.debug("Class canonical name: " + classname);
-
-				Class classObject;
+				log.debug(String.format("File absolute path: %s - Class canonical name: %s", filename, classname));
 
 				try {
-					classObject = urlClassLoader.loadClass(classname);
+					Class classObject = urlClassLoader.loadClass(classname);
 
 					List<Method> methodsList = new LinkedList<>();
 					Method[] methods = classObject.getDeclaredMethods();
@@ -63,12 +58,10 @@ public class FilesScanner {
 						methodsList.add(method);
 					}
 					scanResultsMap.put(classObject, methodsList);
-
-				} catch (Throwable e) {
+				} catch (Exception e) {
 					log.debug(e);
 				}
 			});
-
 		} catch (Exception e) {
 			log.debug(e);
 		}
@@ -80,6 +73,10 @@ public class FilesScanner {
 	}
 
 	public Map<Class<?>, List<Method>> getFilteredResults(List<AnnotationsFilter> filters) {
+
+		if (filters.isEmpty()) {
+			return scanResultsMap;
+		}
 
 		Map<Class<?>, List<Method>> filteredMap = new HashMap<>();
 
@@ -128,6 +125,7 @@ public class FilesScanner {
 	private boolean hasAnnotationAttributesMatch(Method method, Class<? extends Annotation> expectedAnnotation, Map<String, String> expectedAnnotationAttributes) {
 
 		List<Boolean> isMatchList = new LinkedList<>();
+		boolean isAllAnnotationAttributesMatched;
 
 		if (method.isAnnotationPresent(expectedAnnotation)) {
 			Annotation annotation = method.getAnnotation(expectedAnnotation);
@@ -159,14 +157,16 @@ public class FilesScanner {
 			}
 		}
 
-		return (isMatchList.size() == expectedAnnotationAttributes.size());
+		isAllAnnotationAttributesMatched = (isMatchList.size() == expectedAnnotationAttributes.size()) ? true : false;
+
+		return isAllAnnotationAttributesMatched;
 	}
 
 	private String convertFileAbsolutePathToClassCanonicalName(String absolutePath, String absolutePathDirsPrefix, String fileExtension) {
 
 		String canonicalClassname = absolutePath.replace(fileExtension, "")
 				.replace(absolutePathDirsPrefix, "")
-				.replaceAll(File.separator, DOT_CHARACTER);
+				.replaceAll(File.separator, ".");
 
 		return canonicalClassname;
 	}

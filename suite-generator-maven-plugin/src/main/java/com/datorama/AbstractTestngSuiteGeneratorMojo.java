@@ -30,20 +30,20 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+
 		setSuiteTopLevelPreConfiguration();
 		generate();
 		setSuiteTopLevelPostConfiguration();
 	}
 
 	protected void setSuiteTopLevelPreConfiguration() {
+
 		//Create an instance of XML Suite and assign a name
 		topLevelSuite = new XmlSuite();
 		topLevelSuite.setName(getSuiteName());
 
 		topLevelTestsList = new ArrayList<>();
-
 		setSuiteGlobalConfiguration();
-
 		urlClassLoader = setPluginClasspath(getProjectAdditionalClasspathElements());
 	}
 
@@ -51,7 +51,9 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		XmlSuite.ParallelMode enumParallelMode = XmlSuite.ParallelMode.getValidParallel(getParallelMode());
 		topLevelSuite.setParallel(enumParallelMode);
-		topLevelSuite.setThreadCount(getThreadCount());
+		if (enumParallelMode != XmlSuite.ParallelMode.NONE) {
+			topLevelSuite.setThreadCount(getThreadCount());
+		}
 		topLevelSuite.setListeners(getListeners());
 		topLevelSuite.setExcludedGroups(getExcludedGroups());
 		topLevelSuite.setIncludedGroups(getIncludedGroups());
@@ -71,7 +73,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		//Create XML file based on the virtual XML content
 		suitesList.forEach(xmlSuite -> {
-			FileUtils.writeFile(getBasedir() + getSuiteRelativePath(), xmlSuite.toXml(), getLog());
+			writeFile(getSuiteRelativePath(), xmlSuite.toXml(), getLog());
 		});
 	}
 

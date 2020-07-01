@@ -6,8 +6,12 @@
  */
 package com.datorama;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.maven.plugin.logging.Log;
@@ -15,8 +19,6 @@ import org.apache.maven.plugin.logging.Log;
 import com.google.common.base.Splitter;
 
 public class DependencyScanner {
-
-	final String ELEMENTS_SEPERATOR = ":";
 
 	private Log log;
 	private File dir;
@@ -27,23 +29,17 @@ public class DependencyScanner {
 		this.dir = basedir;
 	}
 
-	public List<String> scan() {
-
-		final String mavenCommand = "mvn ";
-		final String mavenPlugin = "dependency";
-		final String mavenGoal = "build-classpath";
-
-		buffer = Commander.executeCommand(mavenCommand + mavenPlugin + ELEMENTS_SEPERATOR + mavenGoal, new String[] {}, dir, log);
-		log.debug("Dependency build-classpath command: " + buffer);
-
-		return getBuildClasspathElements();
+	public void scan() {
+		execMavenDependencyPlugin();
 	}
 
-	private List<String> getBuildClasspathElements() {
+	public List<String> getBuildClasspathElements() {
+
+		final String ELEMENTS_SEPARATOR = ":";
 
 		String buildClasspathLine = parseBuildClasspathLine(buffer);
-		List<String> buildClasspathElements = Splitter.on(ELEMENTS_SEPERATOR).omitEmptyStrings().trimResults().splitToList(buildClasspathLine);
-		buildClasspathElements.forEach(element -> log.debug("Dependencies classpath: " + element));
+		List<String> buildClasspathElements = Splitter.on(ELEMENTS_SEPARATOR).omitEmptyStrings().trimResults().splitToList(buildClasspathLine);
+		buildClasspathElements.forEach(element -> log.debug("Dependencies classpath element: " + element));
 
 		return buildClasspathElements;
 	}
@@ -58,5 +54,18 @@ public class DependencyScanner {
 				.mapToObj(i -> textLines[i]).findFirst().orElse("");
 
 		return buildClasspathLine;
+	}
+
+	private void execMavenDependencyPlugin() {
+
+		Runtime runtime = Runtime.getRuntime();
+
+		try {
+			Process process = runtime.exec("mvn dependency:build-classpath", new String[0], dir);
+			buffer = new BufferedReader(new InputStreamReader(process.getInputStream())).lines()
+					.parallel().collect(Collectors.joining(System.lineSeparator()));
+		} catch (Exception e) {
+			log.error(e);
+		}
 	}
 }

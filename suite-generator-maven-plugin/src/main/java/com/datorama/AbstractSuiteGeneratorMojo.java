@@ -7,15 +7,21 @@
 package com.datorama;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.io.Files;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -100,7 +106,7 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	/**
 	 * The verbose level to configure in xml file.
 	 */
-	@Parameter(property = "verbose")
+	@Parameter(property = "verbose", defaultValue = "1")
 	private int verbose;
 
 	/**
@@ -127,62 +133,6 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	@Parameter(property = "included.groups")
 	private List<String> includedGroups;
 
-
-	protected URLClassLoader setPluginClasspath(List<String> additionalClasspathElements) {
-
-		pluginDescriptor = (PluginDescriptor) getPluginContext().get("pluginDescriptor");
-		final ClassRealm classRealm = pluginDescriptor.getClassRealm();
-
-		// Add all classpath elements to plugin
-		for (String classpathElement : additionalClasspathElements) {
-			final File classes = new File(classpathElement);
-
-			try {
-				classRealm.addURL(classes.toURI().toURL());
-			} catch (MalformedURLException e) {
-				getLog().error(e);
-			}
-		}
-
-		// Add all classpath elements to project
-		for (URL url : classRealm.getURLs()) {
-			try {
-				this.project.getCompileClasspathElements().add(url.getPath());
-				this.project.getRuntimeClasspathElements().add(url.getPath());
-				getLog().debug("Suite Generator Plugin ClassRealm URLs >>> " + url.toString());
-			} catch (DependencyResolutionRequiredException e) {
-				getLog().error(e);
-			}
-		}
-
-		// Print all compile / runtime project classpath elements
-		try {
-			getLog().debug("compile cp: " +
-					this.project.getCompileClasspathElements());
-			getLog().debug("runtime cp: " +
-					this.project.getRuntimeClasspathElements());
-		} catch (DependencyResolutionRequiredException e) {
-			getLog().error(e);
-		}
-
-		URLClassLoader urlClassLoader = new URLClassLoader(classRealm.getURLs(), classRealm);
-
-		return urlClassLoader;
-	}
-
-	protected List<String> getProjectAdditionalClasspathElements() {
-
-		DependencyScanner dependencyScanner = new DependencyScanner(new File(getBasedir()), getLog());
-		List<String> additionalClasspathElements = new ArrayList<>(dependencyScanner.scan());
-		additionalClasspathElements.add(getBasedir() + getTestClassesDirectory());
-		additionalClasspathElements.add(getBasedir() + getClassesDirectory());
-
-		return additionalClasspathElements;
-	}
-
-	private String validatePathEndsWithFileSeparator(String path) {
-		return (path.endsWith(File.separator))? path : (path + File.separator);
-	}
 
 	public String getBasedir() {
 		setBasedir(validatePathEndsWithFileSeparator(basedir));
@@ -305,5 +255,62 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
 	public void setIncludedGroups(List<String> includedGroups) {
 		this.includedGroups = includedGroups;
+	}
+
+	protected URLClassLoader setPluginClasspath(List<String> additionalClasspathElements) {
+
+		pluginDescriptor = (PluginDescriptor) getPluginContext().get("pluginDescriptor");
+		final ClassRealm classRealm = pluginDescriptor.getClassRealm();
+
+		// Add all classpath elements to plugin
+		for (String classpathElement : additionalClasspathElements) {
+			try {
+				URL url = new File(classpathElement).toURI().toURL();;
+				classRealm.addURL(url);
+				getLog().debug("Add to plugin classRealm Classpath Element URL: " + url.toString());
+			} catch (MalformedURLException e) {
+				getLog().error(e);
+			}
+		}
+
+		// Add all classpath elements to project
+		for (URL url : classRealm.getURLs()) {
+			try {
+				this.project.getCompileClasspathElements().add(url.getPath());
+				this.project.getRuntimeClasspathElements().add(url.getPath());
+				getLog().debug("Add to plugin project Classpath Element URL: " + url.toString());
+			} catch (DependencyResolutionRequiredException e) {
+				getLog().error(e);
+			}
+		}
+
+		URLClassLoader urlClassLoader = new URLClassLoader(classRealm.getURLs(), classRealm);
+
+		return urlClassLoader;
+	}
+
+	protected List<String> getProjectAdditionalClasspathElements() {
+
+		DependencyScanner dependencyScanner = new DependencyScanner(new File(getBasedir()), getLog());
+		dependencyScanner.scan();
+		List<String> additionalClasspathElements = new ArrayList<>(dependencyScanner.getBuildClasspathElements());
+		additionalClasspathElements.add(getBasedir() + getTestClassesDirectory());
+		additionalClasspathElements.add(getBasedir() + getClassesDirectory());
+
+		return additionalClasspathElements;
+	}
+
+	private String validatePathEndsWithFileSeparator(String path) {
+		return (path.endsWith(File.separator))? path : (path + File.separator);
+	}
+
+	protected void writeFile(final String filename, final String content, Log log) {
+		try {
+			File file = new File(getBasedir() + filename);
+			Files.write(content.getBytes(), file);
+			log.info(String.format("File %s generated successfully", file.getAbsolutePath()));
+		} catch (IOException | NullPointerException e) {
+			log.error(String.format("Failed to generate file %s", filename) + e);
+		}
 	}
 }
