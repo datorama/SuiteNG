@@ -78,7 +78,6 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 	protected List<AnnotationsFilter> buildFiltersByIncludedGroups() {
 
 		final String ATTRIBUTE_GROUPS = "groups";
-		final String ATTRIBUTE_ENABlED = "enabled";
 
 		List<AnnotationsFilter> filters = new ArrayList<>();
 

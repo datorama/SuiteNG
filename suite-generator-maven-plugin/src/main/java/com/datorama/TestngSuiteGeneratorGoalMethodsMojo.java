@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -56,7 +55,7 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 
 		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
 		scanner.scan(getBasedir() + getTestClassesDirectory());
-scanner.getRawResults();
-		return scanner.getResultsFilteredByTestAnnotation(buildFiltersByIncludedGroups());
+
+		return scanner.getFilteredResults(buildFiltersByIncludedGroups());
 	}
 }

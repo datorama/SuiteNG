@@ -79,7 +79,7 @@ public class FilesScanner {
 		return scanResultsMap;
 	}
 
-	public Map<Class<?>, List<Method>> getResultsFilteredByTestAnnotation(List<AnnotationsFilter> filters) {
+	public Map<Class<?>, List<Method>> getFilteredResults(List<AnnotationsFilter> filters) {
 
 		Map<Class<?>, List<Method>> filteredMap = new HashMap<>();
 
@@ -118,7 +118,7 @@ public class FilesScanner {
 
 		filter.getAnnotationsFilterMap().forEach((annotation, attributes) -> {
 			if (!hasAnnotationAttributesMatch(method, annotation, attributes)){
-				isMatch.set(false); // if at least one of the annotations or attributes are not matched, the method will not have a filter match
+				isMatch.set(false);
 			}
 		});
 

@@ -55,6 +55,6 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
 		scanner.scan(getBasedir() + getTestClassesDirectory());
 
-		return scanner.getResultsFilteredByTestAnnotation(buildFiltersByIncludedGroups());
+		return scanner.getFilteredResults(buildFiltersByIncludedGroups());
 	}
 }
