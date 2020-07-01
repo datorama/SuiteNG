@@ -51,9 +51,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		XmlSuite.ParallelMode enumParallelMode = XmlSuite.ParallelMode.getValidParallel(getParallelMode());
 		topLevelSuite.setParallel(enumParallelMode);
-		if (enumParallelMode != XmlSuite.ParallelMode.NONE) {
-			topLevelSuite.setThreadCount(getThreadCount());
-		}
+		topLevelSuite.setThreadCount(getThreadCount());
 		topLevelSuite.setListeners(getListeners());
 		topLevelSuite.setExcludedGroups(getExcludedGroups());
 		topLevelSuite.setIncludedGroups(getIncludedGroups());
