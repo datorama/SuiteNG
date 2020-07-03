@@ -26,6 +26,7 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 	@Override
 	public void generate() {
 
+		scanProjectFiles();
 		setTestClasses();
 	}
 
@@ -47,11 +48,9 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	private Set<Class<?>> getTestsClasses() {
 
-		ClassRealm classRealm = pluginDescriptor.getClassRealm();
-		FilesScanner scanner = new FilesScanner(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
-		scanner.scan(getBasedir() + getTestClassesDirectory());
-		Set<Class<?>> classNames = scanner.getFilteredResults(buildFiltersByIncludedGroups()).keySet();
+		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty())? buildFiltersByTestAnnotation(): buildFiltersByIncludedGroups();
 
-		return classNames;
+		return scanner.getFilteredResults(filters).keySet();
 	}
+
 }

@@ -87,4 +87,16 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		return filters;
 	}
+
+	protected List<AnnotationsFilter> buildFiltersByTestAnnotation() {
+
+		List<AnnotationsFilter> filters = new ArrayList<>();
+
+		Map<String, String> attributes = ImmutableMap.of();
+		Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(Test.class, attributes);
+		AnnotationsFilter filter = new AnnotationsFilter(annotationsFilterMap);
+		filters.add(filter);
+
+		return filters;
+	}
 }

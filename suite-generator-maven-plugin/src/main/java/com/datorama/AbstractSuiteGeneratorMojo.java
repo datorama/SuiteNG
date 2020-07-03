@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +129,9 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 */
 	@Parameter(property = "included.groups")
 	private List<String> includedGroups;
+
+	protected FilesScanner scanner;
+
 
 	public String getBasedir() {
 		setBasedir(validatePathEndsWithFileSeparator(basedir));
@@ -270,7 +274,8 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
 	protected List<String> getProjectAdditionalClasspathElements() {
 
-		DependencyScanner dependencyScanner = new DependencyScanner(new File(getBasedir()), getLog());
+		DependencyScanner dependencyScanner = DependencyScanner.getInstance();
+		dependencyScanner.init(new File(getBasedir()), getLog());
 		dependencyScanner.scan();
 		List<String> additionalClasspathElements = new ArrayList<>(dependencyScanner.getBuildClasspathElements());
 		additionalClasspathElements.add(getBasedir() + getTestClassesDirectory());
@@ -291,5 +296,12 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		} catch (IOException | NullPointerException e) {
 			log.error(String.format("Failed to generate file %s", filename) + e);
 		}
+	}
+
+	protected void scanProjectFiles() {
+		ClassRealm classRealm = pluginDescriptor.getClassRealm();
+		scanner = FilesScanner.getInstance();
+		scanner.init(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
+		scanner.scan(getBasedir() + getTestClassesDirectory());
 	}
 }

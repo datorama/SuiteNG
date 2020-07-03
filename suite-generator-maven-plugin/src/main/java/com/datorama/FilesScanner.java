@@ -14,10 +14,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,11 +29,31 @@ public class FilesScanner {
 
 	private Log log;
 	private URLClassLoader urlClassLoader;
-	private Map<Class<?>, List<Method>> scanResultsMap = new HashMap<>();            // contains all methods per classname
+	private Map<Class<?>, List<Method>> scanResultsMap = new HashMap<>();
+	private static FilesScanner instance;
 
-	public FilesScanner(URLClassLoader urlClassLoader, Log log) {
+
+	private FilesScanner() {}
+
+	public void init(URLClassLoader urlClassLoader, Log log) {
 		this.log = log;
 		this.urlClassLoader = urlClassLoader;
+	}
+
+	public static FilesScanner getInstance()
+	{
+		if (instance == null)
+		{
+			synchronized (FilesScanner.class)
+			{
+				if(instance==null)
+				{
+					instance = new FilesScanner();
+				}
+
+			}
+		}
+		return instance;
 	}
 
 	public void scan(String directoryPath) {
@@ -86,7 +103,7 @@ public class FilesScanner {
 		scanResultsMap.forEach((clazz, methods) -> {
 			List<Method> filteredClassMethods = new LinkedList<>();
 			methods.forEach(method -> {
-				if (hasAtLeastOneFilterMatch(method, filters)) {
+				if (isAtLeastOneFilterMatch(method, filters)) {
 					filteredClassMethods.add(method);
 				}
 			});
@@ -99,12 +116,12 @@ public class FilesScanner {
 		return filteredMap;
 	}
 
-	private boolean hasAtLeastOneFilterMatch(Method method, List<AnnotationsFilter> filters) {
+	private boolean isAtLeastOneFilterMatch(Method method, List<AnnotationsFilter> filters) {
 
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (hasFilterMatch(method, filter)) {
+			if (isFilterMatch(method, filter)) {
 				isMatch.set(true);
 			}
 		});
@@ -112,57 +129,76 @@ public class FilesScanner {
 		return isMatch.get();
 	}
 
-	private boolean hasFilterMatch(Method method, AnnotationsFilter filter) {
+	private boolean isFilterMatch(Method method, AnnotationsFilter filter) {
 
-		AtomicBoolean isMatch = new AtomicBoolean(true);
+		AtomicBoolean isMatch = new AtomicBoolean(false);
 
-		filter.getAnnotationsFilterMap().forEach((annotation, attributes) -> {
-			if (!hasAnnotationAttributesMatch(method, annotation, attributes)) {
-				isMatch.set(false);
+		filter.getAnnotationsFilterMap().forEach((expectedAnnotation, expectedAttributes) -> {
+			if (isAnnotationMatch(method, expectedAnnotation)) {
+				if (expectedAttributes.isEmpty()) {
+					isMatch.set(true);
+				} else {
+					isMatch.set(isAttributesMatch(method, expectedAnnotation, expectedAttributes));
+				}
 			}
 		});
 
 		return isMatch.get();
 	}
 
-	private boolean hasAnnotationAttributesMatch(Method method, Class<? extends Annotation> expectedAnnotation, Map<String, String> expectedAnnotationAttributes) {
+	private boolean isAnnotationMatch(Method method, Class<? extends Annotation> expectedAnnotation) {
+		return method.isAnnotationPresent(expectedAnnotation);
+	}
 
-		List<Boolean> isMatchList = new LinkedList<>();
-		boolean isAllAnnotationAttributesMatched;
+	private boolean isAttributesMatch(Method method, Class<? extends Annotation> expectedAnnotation, Map<String, String> expectedAttributes) {
 
-		if (method.isAnnotationPresent(expectedAnnotation)) {
-			Annotation annotation = method.getAnnotation(expectedAnnotation);
-			Method[] methods = annotation.annotationType().getDeclaredMethods();
-			for (Method methodItr : methods) {
-				if (methodItr.getParameterTypes().length == 0
-						&& methodItr.getReturnType() != void.class) {
-					try {
-						if (expectedAnnotationAttributes.containsKey(methodItr.getName())) {
-							String expectedValue = expectedAnnotationAttributes.get(methodItr.getName());
-							Object objActualValue = methodItr.invoke(annotation, new Object[0]);
+		List<Boolean> matches = new LinkedList<>();
 
-							if (objActualValue instanceof Class) {
-								if (StringUtils.equals(expectedValue, objActualValue.toString())) {
-									isMatchList.add(new Boolean(true));
-								}
-							} else if (objActualValue instanceof String[]) {
-								if (ArrayUtils.contains((String[]) objActualValue, expectedValue)) {
-									isMatchList.add(new Boolean(true));
-								}
-							}
+		Annotation annotation = method.getAnnotation(expectedAnnotation);
+		Method[] methods = annotation.annotationType().getDeclaredMethods();
+
+		for (Method annotationMethod : methods) {
+			if (isAttributeMethod(annotationMethod)) {
+				try {
+					if (expectedAttributes.containsKey(annotationMethod.getName())) {
+						String expectedValue = expectedAttributes.get(annotationMethod.getName());
+						Object actualValue = annotationMethod.invoke(annotation, new Object[0]);
+
+						if (compareAttributeValue(actualValue, expectedValue)) {
+							matches.add(new Boolean(true));
 						}
-					} catch (IllegalAccessException e) {
-						log.debug(e);
-					} catch (InvocationTargetException e) {
-						log.debug(e);
 					}
+				} catch (IllegalAccessException | IllegalArgumentException |  InvocationTargetException | NullPointerException | ExceptionInInitializerError e) {
+					log.debug(e);
 				}
 			}
 		}
 
-		isAllAnnotationAttributesMatched = (isMatchList.size() == expectedAnnotationAttributes.size()) ? true : false;
+		return (!expectedAttributes.isEmpty() && matches.size() == expectedAttributes.size());
+	}
 
-		return isAllAnnotationAttributesMatched;
+	private boolean compareAttributeValue(Object actualValue, String expectedValue ) {
+
+		if (actualValue instanceof Class) {
+			if (StringUtils.equals(expectedValue, actualValue.toString())) {
+				return true;
+			}
+		} else if (actualValue instanceof String[]) {
+			if (ArrayUtils.contains((String[]) actualValue, expectedValue)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isAttributeMethod(Method method) {
+		if (method.getParameterTypes().length == 0
+				&& method.getReturnType() != void.class) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private String convertFileAbsolutePathToClassCanonicalName(String absolutePath, String absolutePathDirsPrefix, String fileExtension) {
@@ -173,4 +209,5 @@ public class FilesScanner {
 
 		return canonicalClassname;
 	}
+
 }
