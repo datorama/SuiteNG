@@ -6,12 +6,14 @@
  */
 package com.datorama;
 
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlTest;
 
@@ -23,6 +25,7 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	@Override
 	public void generate() {
+
 		setTestClasses();
 	}
 
@@ -44,7 +47,8 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	private Set<Class<?>> getTestsClasses() {
 
-		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
+		ClassRealm classRealm = pluginDescriptor.getClassRealm();
+		FilesScanner scanner = new FilesScanner(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
 		scanner.scan(getBasedir() + getTestClassesDirectory());
 		Set<Class<?>> classNames = scanner.getFilteredResults(buildFiltersByIncludedGroups()).keySet();
 

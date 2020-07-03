@@ -14,7 +14,10 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -100,7 +103,7 @@ public class FilesScanner {
 
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
-		filters.forEach( filter -> {
+		filters.forEach(filter -> {
 			if (hasFilterMatch(method, filter)) {
 				isMatch.set(true);
 			}
@@ -114,7 +117,7 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(true);
 
 		filter.getAnnotationsFilterMap().forEach((annotation, attributes) -> {
-			if (!hasAnnotationAttributesMatch(method, annotation, attributes)){
+			if (!hasAnnotationAttributesMatch(method, annotation, attributes)) {
 				isMatch.set(false);
 			}
 		});
@@ -143,7 +146,7 @@ public class FilesScanner {
 									isMatchList.add(new Boolean(true));
 								}
 							} else if (objActualValue instanceof String[]) {
-								if (ArrayUtils.contains((String[])objActualValue, expectedValue)) {
+								if (ArrayUtils.contains((String[]) objActualValue, expectedValue)) {
 									isMatchList.add(new Boolean(true));
 								}
 							}

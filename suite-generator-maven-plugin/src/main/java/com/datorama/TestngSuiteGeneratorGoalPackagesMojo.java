@@ -22,6 +22,7 @@ public class TestngSuiteGeneratorGoalPackagesMojo extends AbstractTestngSuiteGen
 
 	@Override
 	public void generate() {
+
 		setTestsPackage();
 	}
 

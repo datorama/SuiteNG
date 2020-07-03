@@ -7,12 +7,14 @@
 package com.datorama;
 
 import java.lang.reflect.Method;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
@@ -25,6 +27,7 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 
 	@Override
 	public void generate() {
+
 		setTestIncludeMethods(getTestMethodsPerClass());
 	}
 
@@ -52,7 +55,9 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 
 	private Map<Class<?>, List<Method>> getTestMethodsPerClass() {
 
-		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
+		ClassRealm classRealm = pluginDescriptor.getClassRealm();
+		FilesScanner scanner = new FilesScanner(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
+
 		scanner.scan(getBasedir() + getTestClassesDirectory());
 
 		return scanner.getFilteredResults(buildFiltersByIncludedGroups());

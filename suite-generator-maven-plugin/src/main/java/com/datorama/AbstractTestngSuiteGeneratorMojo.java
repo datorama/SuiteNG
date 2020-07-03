@@ -7,10 +7,9 @@
 package com.datorama;
 
 import java.lang.annotation.Annotation;
-import java.net.URLClassLoader;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -22,7 +21,6 @@ import com.google.common.collect.ImmutableMap;
 
 public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGeneratorMojo {
 
-	protected URLClassLoader urlClassLoader;
 	protected XmlSuite topLevelSuite;
 	protected List<XmlTest> topLevelTestsList;
 
@@ -30,7 +28,7 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-
+		setPluginClasspath(getProjectAdditionalClasspathElements());
 		setSuiteTopLevelPreConfiguration();
 		generate();
 		setSuiteTopLevelPostConfiguration();
@@ -44,7 +42,6 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		topLevelTestsList = new ArrayList<>();
 		setSuiteGlobalConfiguration();
-		urlClassLoader = setPluginClasspath(getProjectAdditionalClasspathElements());
 	}
 
 	protected void setSuiteGlobalConfiguration() {
