@@ -6,14 +6,12 @@
  */
 package com.datorama;
 
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlTest;
 
@@ -48,7 +46,7 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	private Set<Class<?>> getTestsClasses() {
 
-		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty())? buildFiltersByTestAnnotation(): buildFiltersByIncludedGroups();
+		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
 
 		return scanner.getFilteredResults(filters).keySet();
 	}

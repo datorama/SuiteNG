@@ -14,7 +14,10 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,22 +35,18 @@ public class FilesScanner {
 	private Map<Class<?>, List<Method>> scanResultsMap = new HashMap<>();
 	private static FilesScanner instance;
 
-
-	private FilesScanner() {}
+	private FilesScanner() {
+	}
 
 	public void init(URLClassLoader urlClassLoader, Log log) {
 		this.log = log;
 		this.urlClassLoader = urlClassLoader;
 	}
 
-	public static FilesScanner getInstance()
-	{
-		if (instance == null)
-		{
-			synchronized (FilesScanner.class)
-			{
-				if(instance==null)
-				{
+	public static FilesScanner getInstance() {
+		if (instance == null) {
+			synchronized (FilesScanner.class) {
+				if (instance == null) {
 					instance = new FilesScanner();
 				}
 
@@ -168,7 +167,7 @@ public class FilesScanner {
 							matches.add(new Boolean(true));
 						}
 					}
-				} catch (IllegalAccessException | IllegalArgumentException |  InvocationTargetException | NullPointerException | ExceptionInInitializerError e) {
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NullPointerException | ExceptionInInitializerError e) {
 					log.debug(e);
 				}
 			}
@@ -177,7 +176,7 @@ public class FilesScanner {
 		return (!expectedAttributes.isEmpty() && matches.size() == expectedAttributes.size());
 	}
 
-	private boolean compareAttributeValue(Object actualValue, String expectedValue ) {
+	private boolean compareAttributeValue(Object actualValue, String expectedValue) {
 
 		if (actualValue instanceof Class) {
 			if (StringUtils.equals(expectedValue, actualValue.toString())) {

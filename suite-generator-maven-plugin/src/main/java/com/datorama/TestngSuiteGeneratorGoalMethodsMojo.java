@@ -7,14 +7,12 @@
 package com.datorama;
 
 import java.lang.reflect.Method;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
@@ -57,7 +55,7 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 
 	private Map<Class<?>, List<Method>> getTestMethodsPerClass() {
 
-		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty())? buildFiltersByTestAnnotation(): buildFiltersByIncludedGroups();
+		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
 
 		return scanner.getFilteredResults(filters);
 	}

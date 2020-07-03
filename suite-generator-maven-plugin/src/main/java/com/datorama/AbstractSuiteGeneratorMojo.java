@@ -132,7 +132,6 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
 	protected FilesScanner scanner;
 
-
 	public String getBasedir() {
 		setBasedir(validatePathEndsWithFileSeparator(basedir));
 		return basedir;
@@ -284,17 +283,13 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		return additionalClasspathElements;
 	}
 
-	private String validatePathEndsWithFileSeparator(String path) {
-		return (path.endsWith(File.separator)) ? path : (path + File.separator);
-	}
-
-	protected void writeFile(final String filename, final String content, Log log) {
+	protected void writeFile(final String filename, final String content) {
 		try {
 			File file = new File(getBasedir() + filename);
 			Files.write(content.getBytes(), file);
-			log.info(String.format("File %s generated successfully", file.getAbsolutePath()));
+			getLog().info(String.format("File %s generated successfully", file.getAbsolutePath()));
 		} catch (IOException | NullPointerException e) {
-			log.error(String.format("Failed to generate file %s", filename) + e);
+			getLog().error(String.format("Failed to generate file %s", filename) + e);
 		}
 	}
 
@@ -304,4 +299,9 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		scanner.init(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
 		scanner.scan(getBasedir() + getTestClassesDirectory());
 	}
+
+	private String validatePathEndsWithFileSeparator(String path) {
+		return (path.endsWith(File.separator)) ? path : (path + File.separator);
+	}
+
 }

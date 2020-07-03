@@ -9,7 +9,6 @@ package com.datorama;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.net.URLClassLoader;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -25,22 +24,18 @@ public class DependencyScanner {
 	private String buffer = "";
 	private static DependencyScanner instance;
 
-
-	private DependencyScanner() {}
+	private DependencyScanner() {
+	}
 
 	public void init(File basedir, Log log) {
 		this.dir = basedir;
 		this.log = log;
 	}
 
-	public static DependencyScanner getInstance()
-	{
-		if (instance == null)
-		{
-			synchronized (FilesScanner.class)
-			{
-				if(instance==null)
-				{
+	public static DependencyScanner getInstance() {
+		if (instance == null) {
+			synchronized (FilesScanner.class) {
+				if (instance == null) {
 					instance = new DependencyScanner();
 				}
 			}
