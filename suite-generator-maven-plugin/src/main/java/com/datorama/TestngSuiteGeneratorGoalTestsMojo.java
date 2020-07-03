@@ -44,7 +44,7 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 				classes.add(xmlClass);
 
 				XmlTest xmlTest = new XmlTest(topLevelSuite);
-				xmlTest.setName(clazz + "." + method.getName());
+				xmlTest.setName(clazz.getCanonicalName() + "." + method.getName());
 				xmlTest.setXmlClasses(classes);
 
 				topLevelTestsList.add(xmlTest);
