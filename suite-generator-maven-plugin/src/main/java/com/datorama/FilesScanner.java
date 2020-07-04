@@ -91,7 +91,7 @@ public class FilesScanner {
 		return scanResultsMap;
 	}
 
-	public Map<Class<?>, List<Method>> getFilteredResults(List<AnnotationsFilter> filters) {
+	public Map<Class<?>, List<Method>> getFilteredResults(List<Filter> filters) {
 
 		if (filters.isEmpty()) {
 			return scanResultsMap;
@@ -115,12 +115,12 @@ public class FilesScanner {
 		return filteredMap;
 	}
 
-	private boolean isAtLeastOneFilterMatch(Method method, List<AnnotationsFilter> filters) {
+	private boolean isAtLeastOneFilterMatch(Method method, List<Filter> filters) {
 
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (isFilterMatch(method, filter)) {
+			if (isAnnotationFilterMatch(method, (AnnotationsFilter)filter)) {
 				isMatch.set(true);
 			}
 		});
@@ -128,7 +128,7 @@ public class FilesScanner {
 		return isMatch.get();
 	}
 
-	private boolean isFilterMatch(Method method, AnnotationsFilter filter) {
+	private boolean isAnnotationFilterMatch(Method method, AnnotationsFilter filter) {
 
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
