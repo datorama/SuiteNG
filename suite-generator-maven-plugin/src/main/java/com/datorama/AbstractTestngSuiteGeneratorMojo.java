@@ -50,8 +50,6 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		topLevelSuite.setParallel(enumParallelMode);
 		topLevelSuite.setThreadCount(getThreadCount());
 		topLevelSuite.setListeners(getListeners());
-		topLevelSuite.setExcludedGroups(getExcludedGroups());
-		topLevelSuite.setIncludedGroups(getIncludedGroups());
 		topLevelSuite.setTimeOut(getTimeout());
 		topLevelSuite.setPreserveOrder(isPreserveOrder());
 		topLevelSuite.setVerbose(getVerbose());
@@ -72,11 +70,11 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		});
 	}
 
-	protected List<AnnotationsFilter> buildFiltersByIncludedGroups() {
+	protected List<Filter> buildFiltersByIncludedGroups() {
 
 		final String ATTRIBUTE_GROUPS = "groups";
 
-		List<AnnotationsFilter> filters = new ArrayList<>();
+		List<Filter> filters = new ArrayList<>();
 
 		getIncludedGroups().forEach(includedGroup -> {
 			Map<String, String> attributes = ImmutableMap.of(ATTRIBUTE_GROUPS, includedGroup);
@@ -88,9 +86,9 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		return filters;
 	}
 
-	protected List<AnnotationsFilter> buildFiltersByTestAnnotation() {
+	protected List<Filter> buildFiltersByTestAnnotation() {
 
-		List<AnnotationsFilter> filters = new ArrayList<>();
+		List<Filter> filters = new ArrayList<>();
 
 		Map<String, String> attributes = ImmutableMap.of();
 		Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(Test.class, attributes);

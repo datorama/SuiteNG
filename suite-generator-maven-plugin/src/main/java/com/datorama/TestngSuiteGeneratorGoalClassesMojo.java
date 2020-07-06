@@ -40,13 +40,14 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 		});
 
 		xmlTest.setXmlClasses(xmlClassesList);
-
+//		xmlTest.setExcludedGroups(getExcludedGroups());
+//		xmlTest.setIncludedGroups(getIncludedGroups());
 		topLevelTestsList.add(xmlTest);
 	}
 
 	private Set<Class<?>> getTestsClasses() {
 
-		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
+		List<Filter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
 
 		return scanner.getFilteredResults(filters).keySet();
 	}

@@ -46,7 +46,8 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 				XmlTest xmlTest = new XmlTest(topLevelSuite);
 				xmlTest.setName(clazz.getCanonicalName() + "." + method.getName());
 				xmlTest.setXmlClasses(classes);
-
+//				xmlTest.setExcludedGroups(getExcludedGroups());
+//				xmlTest.setIncludedGroups(getIncludedGroups());
 				topLevelTestsList.add(xmlTest);
 			});
 		});
@@ -54,8 +55,9 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 
 	private Map<Class<?>, List<Method>> getTestMethodsPerClass() {
 
-		List<AnnotationsFilter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
+		List<Filter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
 
 		return scanner.getFilteredResults(filters);
 	}
+
 }
