@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -24,6 +25,8 @@ import com.google.common.io.Files;
 
 public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
+	private FilesScanner filesScanner;
+
 	/**
 	 * Information about this plugin, mainly used to lookup this plugin's configuration from the currently executing
 	 * project.
@@ -31,13 +34,13 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 * @since 2.12
 	 */
 	@Parameter(defaultValue = "${plugin}", readonly = true, required = true)
-	protected PluginDescriptor pluginDescriptor;
+	private PluginDescriptor pluginDescriptor;
 
 	/**
 	 * The Maven project.
 	 */
 	@Parameter(property = "maven.project", defaultValue = "${project}", readonly = true)
-	protected MavenProject project;
+	private MavenProject project;
 
 	/**
 	 * The project base directory path.
@@ -129,7 +132,55 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	@Parameter(property = "included.groups")
 	private List<String> includedGroups;
 
-	protected FilesScanner scanner;
+	/**
+	 * The map of configurations for included filter of the scanned classes / methods.
+	 */
+	@Parameter(property = "included.filters")
+	private Map<String, String> includedFilters;
+
+	/**
+	 * The map of configurations for excluded filter of the scanned classes / methods.
+	 */
+	@Parameter(property = "excluded.filters")
+	private Map<String, String> excludedFilters;
+
+
+
+	public PluginDescriptor getPluginDescriptor() {
+		return pluginDescriptor;
+	}
+
+	public FilesScanner getFilesScanner() {
+		return filesScanner;
+	}
+
+	public void setFilesScanner(FilesScanner filesScanner) {
+		this.filesScanner = filesScanner;
+	}
+
+	public MavenProject getProject() {
+		return project;
+	}
+
+	public void setProject(MavenProject project) {
+		this.project = project;
+	}
+
+	public Map<String, String> getIncludedFilters() {
+		return includedFilters;
+	}
+
+	public void setIncludedFilters(Map<String, String> includedFilters) {
+		this.includedFilters = includedFilters;
+	}
+
+	public Map<String, String> getExcludedFilters() {
+		return excludedFilters;
+	}
+
+	public void setExcludedFilters(Map<String, String> excludedFilters) {
+		this.excludedFilters = excludedFilters;
+	}
 
 	public String getBasedir() {
 		setBasedir(validatePathEndsWithFileSeparator(basedir));
@@ -256,7 +307,7 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 
 	protected void setPluginClasspath(List<String> additionalClasspathElements) {
 
-		final ClassRealm classRealm = pluginDescriptor.getClassRealm();
+		final ClassRealm classRealm = getPluginDescriptor().getClassRealm();
 
 		// Add all classpath elements to plugin
 		for (String classpathElement : additionalClasspathElements) {
@@ -293,10 +344,10 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	}
 
 	protected void scanProjectFiles() {
-		ClassRealm classRealm = pluginDescriptor.getClassRealm();
-		scanner = FilesScanner.getInstance();
-		scanner.init(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
-		scanner.scan(getBasedir() + getTestClassesDirectory());
+		ClassRealm classRealm = getPluginDescriptor().getClassRealm();
+		filesScanner = FilesScanner.getInstance();
+		getFilesScanner().init(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
+		getFilesScanner().scan(getBasedir() + getTestClassesDirectory());
 	}
 
 	private String validatePathEndsWithFileSeparator(String path) {

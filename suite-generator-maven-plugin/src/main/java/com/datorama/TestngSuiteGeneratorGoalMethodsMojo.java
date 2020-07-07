@@ -49,8 +49,8 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 		});
 
 		xmlTest.setXmlClasses(classes);
-//		xmlTest.setExcludedGroups(getExcludedGroups());
-//		xmlTest.setIncludedGroups(getIncludedGroups());
+		xmlTest.setExcludedGroups(getExcludedGroups());
+		xmlTest.setIncludedGroups(getIncludedGroups());
 		topLevelTestsList.add(xmlTest);
 	}
 
@@ -58,7 +58,7 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 
 		List<Filter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
 
-		return scanner.getFilteredResults(filters);
+		return getFilesScanner().getFilteredResults(filters);
 	}
 
 }
