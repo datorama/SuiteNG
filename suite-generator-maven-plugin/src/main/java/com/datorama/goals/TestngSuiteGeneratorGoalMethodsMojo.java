@@ -4,18 +4,22 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama;
+package com.datorama.goals;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.testng.annotations.Test;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
+
+import com.datorama.AbstractTestngSuiteGeneratorMojo;
+import com.datorama.filters.Filter;
+import com.datorama.filters.FiltersBuilder;
 
 /**
  * This goal will generate TestNG suite file with included methods.
@@ -25,30 +29,23 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 
 	@Override
 	public void generate() {
-		setSuiteTopLevelPreConfiguration();
+
+		scanProjectFiles();
 		setTestIncludeMethods(getTestMethodsPerClass());
-		setSuiteTopLevelPostConfiguration();
 	}
 
-	private Map<String, List<String>> getTestMethodsPerClass() {
-
-		FilesScanner scanner = new FilesScanner(urlClassLoader, getLog());
-
-		return scanner.scanFilesMethodsWithAnnotations(basedir + testClassesDirectory, Test.class, ".class");
-	}
-
-	private void setTestIncludeMethods(Map<String, List<String>> methodNamesByClassNameMap) {
+	private void setTestIncludeMethods(Map<Class<?>, List<Method>> methodsPerClassMap) {
 
 		XmlTest xmlTest = new XmlTest(topLevelSuite);
-		xmlTest.setName(testName);
+		xmlTest.setName(getTestName());
 
 		List<XmlClass> classes = new ArrayList<>();
 
-		methodNamesByClassNameMap.forEach((className, methods) -> {
-			XmlClass xmlClass = new XmlClass(className);
+		methodsPerClassMap.forEach((clazz, methods) -> {
+			XmlClass xmlClass = new XmlClass(clazz);
 			List<XmlInclude> xmlIncludeMethods = new ArrayList<>();
 			methods.forEach(method -> {
-				XmlInclude include = new XmlInclude(method);
+				XmlInclude include = new XmlInclude(method.getName());
 				xmlIncludeMethods.add(include);
 			});
 			xmlClass.setIncludedMethods(xmlIncludeMethods);
@@ -56,8 +53,17 @@ public class TestngSuiteGeneratorGoalMethodsMojo extends AbstractTestngSuiteGene
 		});
 
 		xmlTest.setXmlClasses(classes);
-
+		xmlTest.setExcludedGroups(getExcludedGroups());
+		xmlTest.setIncludedGroups(getIncludedGroups());
 		topLevelTestsList.add(xmlTest);
+	}
+
+	private Map<Class<?>, List<Method>> getTestMethodsPerClass() {
+
+		List<Filter> includedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters());
+		List<Filter> excludedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters());
+
+		return getFilesScanner().getFilteredResults(includedAnnotationFilters, excludedAnnotationFilters);
 	}
 
 }

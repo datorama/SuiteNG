@@ -6,7 +6,6 @@
  */
 package com.datorama;
 
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,37 +16,38 @@ import org.testng.xml.XmlTest;
 
 public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGeneratorMojo {
 
-	protected URLClassLoader urlClassLoader;
 	protected XmlSuite topLevelSuite;
 	protected List<XmlTest> topLevelTestsList;
 
+	public abstract void generate();
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		setPluginClasspath(getProjectAdditionalClasspathElements());
+		setSuiteTopLevelPreConfiguration();
 		generate();
+		setSuiteTopLevelPostConfiguration();
 	}
 
 	protected void setSuiteTopLevelPreConfiguration() {
+
 		//Create an instance of XML Suite and assign a name
 		topLevelSuite = new XmlSuite();
-		topLevelSuite.setName(suiteName);
+		topLevelSuite.setName(getSuiteName());
 
 		topLevelTestsList = new ArrayList<>();
-
 		setSuiteGlobalConfiguration();
-
-		urlClassLoader = setPluginClasspath(getProjectAdditionalClasspathElements());
 	}
 
 	protected void setSuiteGlobalConfiguration() {
 
-		XmlSuite.ParallelMode enumParallelMode = XmlSuite.ParallelMode.getValidParallel(parallelMode);
+		XmlSuite.ParallelMode enumParallelMode = XmlSuite.ParallelMode.getValidParallel(getParallelMode());
 		topLevelSuite.setParallel(enumParallelMode);
-		topLevelSuite.setThreadCount(threadCount);
-		topLevelSuite.setListeners(listeners);
-		topLevelSuite.setExcludedGroups(excludedGroups);
-		topLevelSuite.setIncludedGroups(includedGroups);
-		topLevelSuite.setTimeOut(timeout);
-		topLevelSuite.setPreserveOrder(isPreserveOrder);
+		topLevelSuite.setThreadCount(getThreadCount());
+		topLevelSuite.setListeners(getListeners());
+		topLevelSuite.setTimeOut(getTimeout());
+		topLevelSuite.setPreserveOrder(isPreserveOrder());
+		topLevelSuite.setVerbose(getVerbose());
 	}
 
 	protected void setSuiteTopLevelPostConfiguration() {
@@ -61,7 +61,8 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 		//Create XML file based on the virtual XML content
 		suitesList.forEach(xmlSuite -> {
-			FileUtils.writeFile(basedir + suiteRelativePath, xmlSuite.toXml(), getLog());
+			writeFile(getSuiteRelativePath(), xmlSuite.toXml());
 		});
 	}
+
 }

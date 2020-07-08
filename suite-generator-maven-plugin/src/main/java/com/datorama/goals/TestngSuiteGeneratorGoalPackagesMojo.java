@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama;
+package com.datorama.goals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.xml.XmlPackage;
 import org.testng.xml.XmlTest;
 
+import com.datorama.AbstractTestngSuiteGeneratorMojo;
+
 /**
  * This goal will generate TestNG suite file with packages.
  */
@@ -22,21 +24,19 @@ public class TestngSuiteGeneratorGoalPackagesMojo extends AbstractTestngSuiteGen
 
 	@Override
 	public void generate() {
-		setSuiteTopLevelPreConfiguration();
+
 		setTestsPackage();
-		setSuiteTopLevelPostConfiguration();
 	}
 
 	private void setTestsPackage() {
 
 		XmlTest xmlTest = new XmlTest(topLevelSuite);
-		xmlTest.setName(testName);
+		xmlTest.setName(getTestName());
 
 		List<XmlPackage> packagesList = new ArrayList<>();
-		packagesList.add(new XmlPackage(testsPackageName));
+		packagesList.add(new XmlPackage(getTestsPackageName()));
 		xmlTest.setXmlPackages(packagesList);
 
 		topLevelTestsList.add(xmlTest);
 	}
-
 }
