@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama;
+package com.datorama.goals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlTest;
+
+import com.datorama.AbstractTestngSuiteGeneratorMojo;
+import com.datorama.filters.Filter;
+import com.datorama.filters.FiltersBuilder;
 
 /**
  * This goal will generate TestNG suite file with classes.
@@ -47,9 +51,10 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 
 	private Set<Class<?>> getTestsClasses() {
 
-		List<Filter> filters = (getIncludedGroups().isEmpty()) ? buildFiltersByTestAnnotation() : buildFiltersByIncludedGroups();
+		List<Filter> includedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters());
+		List<Filter> excludedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters());
 
-		return getFilesScanner().getFilteredResults(filters).keySet();
+		return getFilesScanner().getFilteredResults(includedAnnotationFilters, excludedAnnotationFilters).keySet();
 	}
 
 }

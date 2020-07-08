@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama;
+package com.datorama.scanners;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -25,6 +25,10 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
+import org.testng.annotations.Test;
+
+import com.datorama.filters.AnnotationsFilter;
+import com.datorama.filters.Filter;
 
 public class FilesScanner {
 
@@ -74,7 +78,9 @@ public class FilesScanner {
 					Method[] methods = classObject.getDeclaredMethods();
 
 					for (Method method : methods) {
-						methodsList.add(method);
+						if (method.isAnnotationPresent(Test.class)) {
+							methodsList.add(method);
+						}
 					}
 					scanResultsMap.put(classObject, methodsList);
 				} catch (Exception e) {
@@ -91,9 +97,9 @@ public class FilesScanner {
 		return scanResultsMap;
 	}
 
-	public Map<Class<?>, List<Method>> getFilteredResults(List<Filter> filters) {
+	public Map<Class<?>, List<Method>> getFilteredResults(List<Filter> includedFilters, List<Filter> excludedFilters) {
 
-		if (filters.isEmpty()) {
+		if (includedFilters.isEmpty() && excludedFilters.isEmpty()) {
 			return scanResultsMap;
 		}
 
@@ -102,7 +108,7 @@ public class FilesScanner {
 		scanResultsMap.forEach((clazz, methods) -> {
 			List<Method> filteredClassMethods = new LinkedList<>();
 			methods.forEach(method -> {
-				if (isAtLeastOneFilterMatch(method, filters)) {
+				if (isAtLeastOneFilterMatch(method, includedFilters) && !isAtLeastOneFilterMatch(method, excludedFilters)) {
 					filteredClassMethods.add(method);
 				}
 			});
@@ -133,7 +139,7 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filter.getAnnotationsFilterMap().forEach((expectedAnnotation, expectedAttributes) -> {
-			if (isAnnotationMatch(method, expectedAnnotation)) {
+			if (method.isAnnotationPresent(expectedAnnotation)) {
 				if (expectedAttributes.isEmpty()) {
 					isMatch.set(true);
 				} else {
@@ -143,10 +149,6 @@ public class FilesScanner {
 		});
 
 		return isMatch.get();
-	}
-
-	private boolean isAnnotationMatch(Method method, Class<? extends Annotation> expectedAnnotation) {
-		return method.isAnnotationPresent(expectedAnnotation);
 	}
 
 	private boolean isAttributesMatch(Method method, Class<? extends Annotation> expectedAnnotation, Map<String, String> expectedAttributes) {

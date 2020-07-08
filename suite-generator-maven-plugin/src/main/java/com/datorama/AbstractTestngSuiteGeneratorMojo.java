@@ -6,18 +6,13 @@
  */
 package com.datorama;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.testng.annotations.Test;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
-
-import com.google.common.collect.ImmutableMap;
 
 public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGeneratorMojo {
 
@@ -70,31 +65,4 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		});
 	}
 
-	protected List<Filter> buildFiltersByIncludedGroups() {
-
-		final String ATTRIBUTE_GROUPS = "groups";
-
-		List<Filter> filters = new ArrayList<>();
-
-		getIncludedGroups().forEach(includedGroup -> {
-			Map<String, String> attributes = ImmutableMap.of(ATTRIBUTE_GROUPS, includedGroup);
-			Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(Test.class, attributes);
-			AnnotationsFilter filter = new AnnotationsFilter(annotationsFilterMap);
-			filters.add(filter);
-		});
-
-		return filters;
-	}
-
-	protected List<Filter> buildFiltersByTestAnnotation() {
-
-		List<Filter> filters = new ArrayList<>();
-
-		Map<String, String> attributes = ImmutableMap.of();
-		Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(Test.class, attributes);
-		AnnotationsFilter filter = new AnnotationsFilter(annotationsFilterMap);
-		filters.add(filter);
-
-		return filters;
-	}
 }

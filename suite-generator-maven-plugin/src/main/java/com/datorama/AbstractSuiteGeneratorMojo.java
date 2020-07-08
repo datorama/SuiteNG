@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
@@ -21,6 +20,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
+import com.datorama.scanners.DependencyScanner;
+import com.datorama.scanners.FilesScanner;
 import com.google.common.io.Files;
 
 public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
@@ -124,27 +125,31 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 * The excluded groups to configure in xml file.
 	 */
 	@Parameter(property = "excluded.groups")
-	private List<String> excludedGroups;
+	private List excludedGroups;
 
 	/**
 	 * The included groups to configure in xml file.
 	 */
 	@Parameter(property = "included.groups")
-	private List<String> includedGroups;
+	private List includedGroups;
 
 	/**
-	 * The map of configurations for included filter of the scanned classes / methods.
+	 * The list of configurations for included annotation filter of the scanned classes / methods.
+	 * Examples:
+	 * 1. org.testng.annotations.Test
+	 * 2. org.testng.annotations.Test#groups=sanity
 	 */
-	@Parameter(property = "included.filters")
-	private Map<String, String> includedFilters;
+	@Parameter(property = "included.annotation.filters")
+	private List includedAnnotationFilters;
 
 	/**
-	 * The map of configurations for excluded filter of the scanned classes / methods.
+	 * The list of configurations for excluded annotation filter of the scanned classes / methods.
+	 * Examples:
+	 * 1. org.testng.annotations.Test
+	 * 2. org.testng.annotations.Test#groups=sanity
 	 */
-	@Parameter(property = "excluded.filters")
-	private Map<String, String> excludedFilters;
-
-
+	@Parameter(property = "excluded.annotation.filters")
+	private List excludedAnnotationFilters;
 
 	public PluginDescriptor getPluginDescriptor() {
 		return pluginDescriptor;
@@ -166,20 +171,20 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		this.project = project;
 	}
 
-	public Map<String, String> getIncludedFilters() {
-		return includedFilters;
+	public List<String> getIncludedAnnotationFilters() {
+		return includedAnnotationFilters;
 	}
 
-	public void setIncludedFilters(Map<String, String> includedFilters) {
-		this.includedFilters = includedFilters;
+	public void setIncludedAnnotationFilters(List<String> includedAnnotationFilters) {
+		this.includedAnnotationFilters = includedAnnotationFilters;
 	}
 
-	public Map<String, String> getExcludedFilters() {
-		return excludedFilters;
+	public List<String> getExcludedAnnotationFilters() {
+		return excludedAnnotationFilters;
 	}
 
-	public void setExcludedFilters(Map<String, String> excludedFilters) {
-		this.excludedFilters = excludedFilters;
+	public void setExcludedAnnotationFilters(List<String> excludedAnnotationFilters) {
+		this.excludedAnnotationFilters = excludedAnnotationFilters;
 	}
 
 	public String getBasedir() {
