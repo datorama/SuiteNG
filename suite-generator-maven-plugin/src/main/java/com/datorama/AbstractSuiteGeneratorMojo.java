@@ -130,8 +130,8 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	/**
 	 * The included groups to configure in xml file.
 	 */
-	@Parameter(property = "included.groups")
-	private List includedGroups;
+	@Parameter(property = "groups")
+	private List groups;
 
 	/**
 	 * The list of configurations for included annotation filter of the scanned classes / methods.
@@ -302,12 +302,12 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		this.excludedGroups = excludedGroups;
 	}
 
-	public List<String> getIncludedGroups() {
-		return includedGroups;
+	public List<String> getGroups() {
+		return groups;
 	}
 
-	public void setIncludedGroups(List<String> includedGroups) {
-		this.includedGroups = includedGroups;
+	public void setGroups(List<String> groups) {
+		this.groups = groups;
 	}
 
 	protected void setPluginClasspath(List<String> additionalClasspathElements) {

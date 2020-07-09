@@ -126,7 +126,7 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (isAnnotationFilterMatch(method, (AnnotationsFilter)filter)) {
+			if (isAnnotationFilterMatch(method, (AnnotationsFilter) filter)) {
 				isMatch.set(true);
 			}
 		});

@@ -20,8 +20,6 @@ import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
 
 import com.datorama.AbstractTestngSuiteGeneratorMojo;
-import com.datorama.filters.Filter;
-import com.datorama.filters.FiltersBuilder;
 
 /**
  * This goal will generate TestNG suite file with included methods.
@@ -51,21 +49,11 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 
 				XmlTest xmlTest = new XmlTest(topLevelSuite);
 				int testCaseID = getTestCaseID(method);
-				xmlTest.setName(((testCaseID != -1)? (testCaseID + " - ") : (cls.getCanonicalName()+ "#"))  + method.getName());
+				xmlTest.setName(((testCaseID != -1) ? (testCaseID + " - ") : (cls.getCanonicalName() + "#")) + method.getName());
 				xmlTest.setXmlClasses(classes);
-				xmlTest.setExcludedGroups(getExcludedGroups());
-				xmlTest.setIncludedGroups(getIncludedGroups());
 				topLevelTestsList.add(xmlTest);
 			});
 		});
-	}
-
-	private Map<Class<?>, List<Method>> getTestMethodsPerClass() {
-
-		List<Filter> includedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters());
-		List<Filter> excludedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters());
-
-		return getFilesScanner().getFilteredResults(includedAnnotationFilters, excludedAnnotationFilters);
 	}
 
 	private int getTestCaseID(Method method) {
@@ -78,7 +66,7 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 			annotationClass = Class.forName(TEST_CASE_ID_ANNOTATION);
 			if (method.isAnnotationPresent(annotationClass)) {
 				Annotation annotation = method.getAnnotation(annotationClass);
-				testCaseID = (int)annotation.getClass().getMethod("id").invoke(annotation, new Object[0]);
+				testCaseID = (int) annotation.getClass().getMethod("id").invoke(annotation, new Object[0]);
 			}
 		} catch (ClassNotFoundException | NullPointerException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			getLog().debug(e);

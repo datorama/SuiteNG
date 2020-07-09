@@ -10,11 +10,28 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
 public class FiltersBuilder {
+
+	public static List<Filter> buildTestngGroupsFilters(List<String> groupsValues) {
+
+		final String TESTNG_TEST_ANNOTATION = "org.testng.annotations.Test";
+		final String GROUPS = "groups";
+
+		List<String> filters = new ArrayList<>();
+
+		if (groupsValues != null) {
+			groupsValues.forEach(groupValue -> {
+				filters.add(TESTNG_TEST_ANNOTATION + "#" + GROUPS + "=" + groupValue);
+			});
+		}
+
+		return buildAnnotationFilters(filters);
+	}
 
 	public static List<Filter> buildAnnotationFilters(List<String> filters) {
 
@@ -27,7 +44,7 @@ public class FiltersBuilder {
 				String attributeValue = parseAttributeValue(filter);
 
 				Map<String, String> attributes = (Strings.isNullOrEmpty(methodName)) ? ImmutableMap.of() : ImmutableMap.of(methodName, attributeValue);
-				Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(getAnnotationClass(className), attributes);
+				Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(Objects.requireNonNull(getAnnotationClass(className)), attributes);
 				Filter annotationsFilter = new AnnotationsFilter(annotationsFilterMap);
 				annotationFiltersList.add(annotationsFilter);
 			});
