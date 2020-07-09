@@ -75,20 +75,12 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 
 	protected Set<Class<?>> getTestsClasses() {
 
-		List<Filter> includedFilters = (!getGroups().isEmpty()) ? FiltersBuilder.buildTestngGroupsFilters(getGroups()) : FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters());
-		List<Filter> excludedFilters = (!getExcludedGroups().isEmpty()) ?
-				FiltersBuilder.buildTestngGroupsFilters(getExcludedGroups()) :
-				FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters());
-
-		return getFilesScanner().getFilteredResults(includedFilters, excludedFilters).keySet();
+		return getFilesScanner().getFilteredResults(getIncludedFilters(), getExcludedFilters()).keySet();
 	}
 
 	protected Map<Class<?>, List<Method>> getTestMethodsPerClass() {
 
-		List<Filter> includedFilters = getIncludedFilters();
-		List<Filter> excludedFilters = getExcludedFilters();
-
-		return getFilesScanner().getFilteredResults(includedFilters, excludedFilters);
+		return getFilesScanner().getFilteredResults(getIncludedFilters(), getExcludedFilters());
 	}
 
 	protected List<Filter> getIncludedFilters() {
