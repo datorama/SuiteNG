@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.xml.XmlClass;
@@ -20,6 +21,7 @@ import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
 
 import com.datorama.AbstractTestngSuiteGeneratorMojo;
+import com.datorama.utils.StringsUtils;
 
 /**
  * This goal will generate TestNG suite file with included methods.
@@ -48,28 +50,46 @@ public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGenera
 				classes.add(xmlClass);
 
 				XmlTest xmlTest = new XmlTest(topLevelSuite);
-				int testCaseID = getTestCaseID(method);
-				xmlTest.setName(((testCaseID != -1) ? (testCaseID + " - ") : (cls.getCanonicalName() + "#")) + method.getName());
+				xmlTest.setName(getTestName(cls, method));
 				xmlTest.setXmlClasses(classes);
 				topLevelTestsList.add(xmlTest);
 			});
 		});
 	}
 
-	private int getTestCaseID(Method method) {
-
-		final String TEST_CASE_ID_ANNOTATION = "com.datorama.listeners.TestCaseId";
-		int testCaseID = -1;
-
-		Class annotationClass;
-		try {
-			annotationClass = Class.forName(TEST_CASE_ID_ANNOTATION);
-			if (method.isAnnotationPresent(annotationClass)) {
-				Annotation annotation = method.getAnnotation(annotationClass);
-				testCaseID = (int) annotation.getClass().getMethod("id").invoke(annotation, new Object[0]);
+	private String getTestName(Class<?> cls, Method method) {
+		if (!getTestCaseId().isEmpty()) {
+			String testCaseId = getTestCaseID(method);
+			if (StringUtils.isNotEmpty(testCaseId)) {
+				return String.format("%s - %s", testCaseId, method.getName());
 			}
-		} catch (ClassNotFoundException | NullPointerException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			getLog().debug(e);
+		}
+
+		return String.format("%s # %s", cls.getCanonicalName(), method.getName());
+	}
+
+	private String getTestCaseID(Method method) {
+
+		String testCaseID = null;
+
+		for (int index = 0; index < getTestCaseId().size(); index++) {
+			String testCaseIdAnnotation = StringsUtils.parseClassName(getTestCaseId().get(index).toString());
+			String testCaseIdAttribute = StringsUtils.parseMethodName(getTestCaseId().get(index).toString());
+
+			Class annotationClass;
+			try {
+				annotationClass = Class.forName(testCaseIdAnnotation);
+				if (method.isAnnotationPresent(annotationClass)) {
+					Annotation annotation = method.getAnnotation(annotationClass);
+					testCaseID = annotation.getClass().getMethod(testCaseIdAttribute).invoke(annotation, new Object[0]).toString();
+				}
+			} catch (ClassNotFoundException | NullPointerException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				getLog().debug(e);
+			}
+
+			if (StringUtils.isNotEmpty(testCaseID)) {
+				break;
+			}
 		}
 
 		return testCaseID;

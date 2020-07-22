@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.datorama.utils.StringsUtils;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
@@ -39,9 +40,9 @@ public class FiltersBuilder {
 
 		if (filters != null) {
 			filters.forEach(filter -> {
-				String className = parseClassName(filter);
-				String methodName = parseMethod(filter);
-				String attributeValue = parseAttributeValue(filter);
+				String className = StringsUtils.parseClassName(filter);
+				String methodName = StringsUtils.parseMethodName(filter);
+				String attributeValue = StringsUtils.parseAttributeValue(filter);
 
 				Map<String, String> attributes = (Strings.isNullOrEmpty(methodName)) ? ImmutableMap.of() : ImmutableMap.of(methodName, attributeValue);
 				Map<Class<? extends Annotation>, Map<String, String>> annotationsFilterMap = ImmutableMap.of(Objects.requireNonNull(getAnnotationClass(className)), attributes);
@@ -50,35 +51,6 @@ public class FiltersBuilder {
 			});
 		}
 		return annotationFiltersList;
-	}
-
-	private static String parseClassName(String input) {
-
-		String className = input.split("#")[0];
-
-		return className;
-	}
-
-	private static String parseMethod(String input) {
-
-		String attributeMethodName = "";
-
-		if (input.contains("#")) {
-			attributeMethodName = input.replaceAll(".+\\#|=.+", "");
-		}
-
-		return attributeMethodName;
-	}
-
-	private static String parseAttributeValue(String input) {
-
-		String attributeValue = "";
-
-		if (input.contains("=")) {
-			attributeValue = input.replaceAll(".+=", "");
-		}
-
-		return attributeValue;
 	}
 
 	private static Class<?> getClass(String className) {
