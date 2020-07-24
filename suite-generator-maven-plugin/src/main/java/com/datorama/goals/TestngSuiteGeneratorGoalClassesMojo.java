@@ -16,8 +16,6 @@ import org.testng.xml.XmlClass;
 import org.testng.xml.XmlTest;
 
 import com.datorama.AbstractTestngSuiteGeneratorMojo;
-import com.datorama.filters.Filter;
-import com.datorama.filters.FiltersBuilder;
 
 /**
  * This goal will generate TestNG suite file with classes.
@@ -44,17 +42,7 @@ public class TestngSuiteGeneratorGoalClassesMojo extends AbstractTestngSuiteGene
 		});
 
 		xmlTest.setXmlClasses(xmlClassesList);
-		xmlTest.setExcludedGroups(getExcludedGroups());
-		xmlTest.setIncludedGroups(getIncludedGroups());
 		topLevelTestsList.add(xmlTest);
-	}
-
-	private Set<Class<?>> getTestsClasses() {
-
-		List<Filter> includedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters());
-		List<Filter> excludedAnnotationFilters = FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters());
-
-		return getFilesScanner().getFilteredResults(includedAnnotationFilters, excludedAnnotationFilters).keySet();
 	}
 
 }

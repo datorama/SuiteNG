@@ -6,13 +6,21 @@
  */
 package com.datorama;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
+
+import com.datorama.filters.Filter;
+import com.datorama.filters.FiltersBuilder;
 
 public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGeneratorMojo {
 
@@ -63,6 +71,28 @@ public abstract class AbstractTestngSuiteGeneratorMojo extends AbstractSuiteGene
 		suitesList.forEach(xmlSuite -> {
 			writeFile(getSuiteRelativePath(), xmlSuite.toXml());
 		});
+	}
+
+	protected Set<Class<?>> getTestsClasses() {
+
+		return getFilesScanner().getFilteredResults(getIncludedFilters(), getExcludedFilters()).keySet();
+	}
+
+	protected Map<Class<?>, List<Method>> getTestMethodsPerClass() {
+
+		return getFilesScanner().getFilteredResults(getIncludedFilters(), getExcludedFilters());
+	}
+
+	protected List<Filter> getIncludedFilters() {
+
+		return Stream.concat(FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters()).stream(), FiltersBuilder.buildTestngGroupsFilters(getGroups()).stream())
+				.collect(Collectors.toList());
+	}
+
+	protected List<Filter> getExcludedFilters() {
+
+		return Stream.concat(FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters()).stream(), FiltersBuilder.buildTestngGroupsFilters(getExcludedGroups()).stream())
+				.collect(Collectors.toList());
 	}
 
 }

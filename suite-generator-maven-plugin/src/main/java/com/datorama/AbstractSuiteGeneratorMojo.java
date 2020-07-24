@@ -119,19 +119,19 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 * The listeners to configure in xml file.
 	 */
 	@Parameter(property = "listeners")
-	private List listeners;
+	private List<String> listeners;
 
 	/**
 	 * The excluded groups to configure in xml file.
 	 */
 	@Parameter(property = "excluded.groups")
-	private List excludedGroups;
+	private List<String> excludedGroups;
 
 	/**
 	 * The included groups to configure in xml file.
 	 */
-	@Parameter(property = "included.groups")
-	private List includedGroups;
+	@Parameter(property = "groups")
+	private List<String> groups;
 
 	/**
 	 * The list of configurations for included annotation filter of the scanned classes / methods.
@@ -140,7 +140,7 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 * 2. org.testng.annotations.Test#groups=sanity
 	 */
 	@Parameter(property = "included.annotation.filters")
-	private List includedAnnotationFilters;
+	private List<String> includedAnnotationFilters;
 
 	/**
 	 * The list of configurations for excluded annotation filter of the scanned classes / methods.
@@ -149,7 +149,16 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 	 * 2. org.testng.annotations.Test#groups=sanity
 	 */
 	@Parameter(property = "excluded.annotation.filters")
-	private List excludedAnnotationFilters;
+	private List<String> excludedAnnotationFilters;
+
+	/**
+	 * The list of custom 3rd party annotations and attributes for test case id used for suite test name.
+	 * Examples:
+	 * com.examples.TestCaseId#jiraId
+	 */
+	@Parameter(property = "test.case.id")
+	private List<String> testCaseId;
+
 
 	public PluginDescriptor getPluginDescriptor() {
 		return pluginDescriptor;
@@ -302,12 +311,20 @@ public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
 		this.excludedGroups = excludedGroups;
 	}
 
-	public List<String> getIncludedGroups() {
-		return includedGroups;
+	public List<String> getGroups() {
+		return groups;
 	}
 
-	public void setIncludedGroups(List<String> includedGroups) {
-		this.includedGroups = includedGroups;
+	public void setGroups(List<String> groups) {
+		this.groups = groups;
+	}
+
+	public List getTestCaseId() {
+		return testCaseId;
+	}
+
+	public void setTestCaseId(List testCaseId) {
+		this.testCaseId = testCaseId;
 	}
 
 	protected void setPluginClasspath(List<String> additionalClasspathElements) {
