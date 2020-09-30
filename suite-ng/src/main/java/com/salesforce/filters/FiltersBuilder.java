@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama.filters;
+package com.salesforce.filters;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.datorama.utils.StringsUtils;
+import com.salesforce.utils.StringsUtils;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 

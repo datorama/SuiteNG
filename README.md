@@ -1,30 +1,30 @@
-# Suite Generator Maven Plugin
+# SuiteNG
 
-This maven plugin provide the ability to dynamicaly create suite files for automation frameworks.
+This maven plugin provide the ability to dynamically create suite files for automation frameworks.
 
 This plugin has 5 goals:
 ```
-suite-generator:help
-  Display help information on suite-generator-maven-plugin.
-  Call mvn suite-generator:help -Ddetail=true -Dgoal=<goal-name> to display
+suiteng:help
+  Display help information on suiteng-maven-plugin.
+  Call mvn suiteng:help -Ddetail=true -Dgoal=<goal-name> to display
   parameter details.
 
-suite-generator:testng-generate-with-classes
+suiteng:testng-generate-with-classes
   This goal will generate TestNG suite file with classes.
 
-suite-generator:testng-generate-with-methods
+suiteng:testng-generate-with-methods
   This goal will generate TestNG suite file with included methods.
 
-suite-generator:testng-generate-with-packages
+suiteng:testng-generate-with-packages
   This goal will generate TestNG suite file with packages.
 
-suite-generator:testng-generate-with-tests
+suiteng:testng-generate-with-tests
   This goal will generate TestNG suite file with included methods.
 ```
 
 ## Usage
 
-Add dependecny in pom file with configuration:
+Add dependency in pom file with the configuration:
 ```
 <project>
   ...
@@ -32,8 +32,8 @@ Add dependecny in pom file with configuration:
     <plugins>
       <plugin>
         <groupId>com.datorama</groupId>
-        <artifactId>suite-generator-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <artifactId>suiteng-maven-plugin</artifactId>
+        <version>X.X.X</version>
         <configuration>
           <isPreserveOrder>...</isPreserveOrder>
           <parallelMode>...</parallelMode>
@@ -114,7 +114,7 @@ Add dependecny in pom file with configuration:
 
 ## Notes
 
-* Currently only suite files for TestNG framework supported
+* Plugin only supports TestNG framework at this point
 * Project should include dependency of maven-surefire-plugin
 
 ## Contributing

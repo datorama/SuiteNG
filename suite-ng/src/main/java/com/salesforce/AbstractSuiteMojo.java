@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama;
+package com.salesforce;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +20,11 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
-import com.datorama.scanners.DependencyScanner;
-import com.datorama.scanners.FilesScanner;
+import com.salesforce.scanners.DependencyScanner;
+import com.salesforce.scanners.FilesScanner;
 import com.google.common.io.Files;
 
-public abstract class AbstractSuiteGeneratorMojo extends AbstractMojo {
+public abstract class AbstractSuiteMojo extends AbstractMojo {
 
 	private FilesScanner filesScanner;
 

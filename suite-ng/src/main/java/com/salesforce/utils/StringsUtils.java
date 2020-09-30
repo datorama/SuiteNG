@@ -1,4 +1,4 @@
-package com.datorama.utils;
+package com.salesforce.utils;
 
 public class StringsUtils {
 

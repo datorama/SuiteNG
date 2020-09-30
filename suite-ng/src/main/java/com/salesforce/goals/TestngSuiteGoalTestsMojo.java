@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.datorama.goals;
+package com.salesforce.goals;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -20,14 +20,14 @@ import org.testng.xml.XmlClass;
 import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlTest;
 
-import com.datorama.AbstractTestngSuiteGeneratorMojo;
-import com.datorama.utils.StringsUtils;
+import com.salesforce.AbstractTestngSuiteMojo;
+import com.salesforce.utils.StringsUtils;
 
 /**
  * This goal will generate TestNG suite file with included methods.
  */
 @Mojo(name = "testng-generate-with-tests", defaultPhase = LifecyclePhase.GENERATE_TEST_RESOURCES)
-public class TestngSuiteGeneratorGoalTestsMojo extends AbstractTestngSuiteGeneratorMojo {
+public class TestngSuiteGoalTestsMojo extends AbstractTestngSuiteMojo {
 
 	@Override
 	public void generate() {
