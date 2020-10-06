@@ -1,0 +1,6 @@
+/target/
+/bin/
+/logs/
+.idea
+*.iml
+/.java-version
