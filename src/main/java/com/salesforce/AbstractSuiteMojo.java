@@ -100,13 +100,13 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	/**
 	 * The suite level timeout in milliseconds to configure in xml file.
 	 */
-	@Parameter(property = "suite.level.timeout.in.milliseconds", defaultValue = "0")
+	@Parameter(property = "suite.timeout", defaultValue = "0")
 	private long suiteLevelTimeoutInMilliseconds;
 
 	/**
 	 * The test level timeout in milliseconds to configure in xml file.
 	 */
-	@Parameter(property = "test.level.timeout.in.milliseconds", defaultValue = "0")
+	@Parameter(property = "test.timeout", defaultValue = "0")
 	private long testLevelTimeoutInMilliseconds;
 
 	/**

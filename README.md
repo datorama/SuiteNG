@@ -58,13 +58,25 @@ Add dependency in pom file with the configuration:
       The path to tests classes directory in project.
       User property: classes.directory
 
+    excludedAnnotationFilters
+      The list of configurations for excluded annotation filter of the scanned
+      classes / methods. Examples: 1. org.testng.annotations.Test 2.
+      org.testng.annotations.Test#groups=sanity
+      User property: excluded.annotation.filters
+
     excludedGroups
       The excluded groups to configure in xml file.
       User property: excluded.groups
 
-    includedGroups
+    groups
       The included groups to configure in xml file.
-      User property: included.groups
+      User property: groups
+
+    includedAnnotationFilters
+      The list of configurations for included annotation filter of the scanned
+      classes / methods. Examples: 1. org.testng.annotations.Test 2.
+      org.testng.annotations.Test#groups=sanity
+      User property: included.annotation.filters
 
     isPreserveOrder
       The preserve order to configure in xml file.
@@ -78,6 +90,10 @@ Add dependency in pom file with the configuration:
       The parallel mode to configure in xml file.
       User property: parallel.mode
 
+    suiteLevelTimeoutInMilliseconds (Default: 0)
+      The suite level timeout in milliseconds to configure in xml file.
+      User property: suite.timeout
+
     suiteName (Default: default)
       The suite name to configure in xml file.
       User property: suite.name
@@ -86,9 +102,18 @@ Add dependency in pom file with the configuration:
       The destination path (including filename) of the xml file.
       User property: suite.relative.path
 
+    testCaseId
+      The list of custom 3rd party annotations and attributes for test case id
+      used for suite test name. Examples: com.examples.TestCaseId#jiraId
+      User property: test.case.id
+
     testClassesDirectory (Default: target/test-classes/)
       The path to tests classes directory in project.
       User property: test.classes.directory
+
+    testLevelTimeoutInMilliseconds (Default: 0)
+      The test level timeout in milliseconds to configure in xml file.
+      User property: test.timeout
 
     testName (Default: default)
       The test name parameter to configure in xml file.
@@ -103,13 +128,10 @@ Add dependency in pom file with the configuration:
       = 'none').
       User property: thread.count
 
-    timeout
-      The timeout to configure in xml file.
-      User property: timeout
-
-    verbose
+    verbose (Default: 1)
       The verbose level to configure in xml file.
       User property: verbose
+
 ```
 
 ## Notes
