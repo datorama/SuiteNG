@@ -51,6 +51,9 @@ public class TestngSuiteGoalTestsMojo extends AbstractTestngSuiteMojo {
 
 				XmlTest xmlTest = new XmlTest(topLevelSuite);
 				xmlTest.setName(getTestName(cls, method));
+				if(getTestLevelTimeoutInMilliseconds() > 0) {
+					xmlTest.setTimeOut(getTestLevelTimeoutInMilliseconds());
+				}
 				xmlTest.setXmlClasses(classes);
 				topLevelTestsList.add(xmlTest);
 			});

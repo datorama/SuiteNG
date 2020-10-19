@@ -13,7 +13,7 @@
     <packaging>maven-plugin</packaging>
     <version>1.0.0</version>
     <name>SuiteNG</name>
-    <description>Maven Suite Generator MOJO</description>
+    <description>Maven SuiteNG MOJO</description>
     <url>http://maven.apache.org</url>
 
     <licenses>
