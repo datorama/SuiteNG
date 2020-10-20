@@ -98,10 +98,16 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	private int threadCount;
 
 	/**
-	 * The timeout to configure in xml file.
+	 * The suite level timeout in milliseconds to configure in xml file.
 	 */
-	@Parameter(property = "timeout")
-	private String timeout;
+	@Parameter(property = "suite.timeout", defaultValue = "0")
+	private long suiteLevelTimeoutInMilliseconds;
+
+	/**
+	 * The test level timeout in milliseconds to configure in xml file.
+	 */
+	@Parameter(property = "test.timeout", defaultValue = "0")
+	private long testLevelTimeoutInMilliseconds;
 
 	/**
 	 * The verbose level to configure in xml file.
@@ -271,12 +277,20 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 		this.threadCount = threadCount;
 	}
 
-	public String getTimeout() {
-		return timeout;
+	public long getSuiteLevelTimeoutInMilliseconds() {
+		return suiteLevelTimeoutInMilliseconds;
 	}
 
-	public void setTimeout(String timeout) {
-		this.timeout = timeout;
+	public void setSuiteLevelTimeoutInMilliseconds(long suiteLevelTimeoutInMilliseconds) {
+		this.suiteLevelTimeoutInMilliseconds = suiteLevelTimeoutInMilliseconds;
+	}
+
+	public long getTestLevelTimeoutInMilliseconds() {
+		return testLevelTimeoutInMilliseconds;
+	}
+
+	public void setTestLevelTimeoutInMilliseconds(long testLevelTimeoutInMilliseconds) {
+		this.testLevelTimeoutInMilliseconds = testLevelTimeoutInMilliseconds;
 	}
 
 	public int getVerbose() {

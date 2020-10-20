@@ -53,9 +53,11 @@ public abstract class AbstractTestngSuiteMojo extends AbstractSuiteMojo {
 		topLevelSuite.setParallel(enumParallelMode);
 		topLevelSuite.setThreadCount(getThreadCount());
 		topLevelSuite.setListeners(getListeners());
-		topLevelSuite.setTimeOut(getTimeout());
 		topLevelSuite.setPreserveOrder(isPreserveOrder());
 		topLevelSuite.setVerbose(getVerbose());
+		if(getSuiteLevelTimeoutInMilliseconds() > 0) {
+			topLevelSuite.setTimeOut(Long.toString(getSuiteLevelTimeoutInMilliseconds()));
+		}
 	}
 
 	protected void setSuiteTopLevelPostConfiguration() {
