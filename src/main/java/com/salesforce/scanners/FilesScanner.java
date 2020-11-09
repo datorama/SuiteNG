@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 
 import com.salesforce.filters.AnnotationsFilter;
 import com.salesforce.filters.Filter;
+import com.salesforce.filters.MethodsFilter;
 
 public class FilesScanner {
 
@@ -126,15 +127,38 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (isAnnotationFilterMatch(method, (AnnotationsFilter) filter)) {
-				isMatch.set(true);
+			if (filter instanceof AnnotationsFilter) {
+				if (isAnnotationsFilterMatch(method, (AnnotationsFilter) filter)) {
+					isMatch.set(true);
+				}
+			}
+			if (filter instanceof MethodsFilter) {
+				if (isMethodsFilterMatch(method, (MethodsFilter) filter)) {
+					isMatch.set(true);
+				}
 			}
 		});
 
 		return isMatch.get();
 	}
 
-	private boolean isAnnotationFilterMatch(Method method, AnnotationsFilter filter) {
+	private boolean isMethodsFilterMatch(Method method, MethodsFilter filter) {
+		AtomicBoolean isMatch = new AtomicBoolean(false);
+
+		if (StringUtils.equalsIgnoreCase(filter.getClassName(),method.getDeclaringClass().getCanonicalName())) {
+			if (StringUtils.isNotEmpty(filter.getMethodName())) {
+				if(StringUtils.equalsIgnoreCase(filter.getMethodName(),method.getName())) {
+					isMatch.set(true);
+				}
+			} else { // No method defined by the user in filter --> all methods in class will match
+				isMatch.set(true);
+			}
+		}
+
+		return isMatch.get();
+	}
+
+	private boolean isAnnotationsFilterMatch(Method method, AnnotationsFilter filter) {
 
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
@@ -181,7 +205,7 @@ public class FilesScanner {
 	private boolean compareAttributeValue(Object actualValue, String expectedValue) {
 
 		if (actualValue instanceof Class) {
-			if (StringUtils.equals(expectedValue, actualValue.toString())) {
+			if (StringUtils.equalsIgnoreCase(expectedValue, actualValue.toString())) {
 				return true;
 			}
 		} else if (actualValue instanceof String[]) {

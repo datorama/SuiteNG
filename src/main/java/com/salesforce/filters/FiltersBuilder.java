@@ -12,11 +12,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.salesforce.utils.StringsUtils;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import com.salesforce.utils.StringsUtils;
 
 public class FiltersBuilder {
+
+	public static List<Filter> buildMethodNameFilters(List<String> filters) {
+
+		List<Filter> filtersList = new ArrayList<>();
+
+		if (filters != null) {
+			filters.forEach(filter -> {
+				String className = StringsUtils.parseClassName(filter);
+				String methodName = StringsUtils.parseMethodName(filter);
+				Filter methodFilter = new MethodsFilter(className, methodName);
+				filtersList.add(methodFilter);
+			});
+		}
+		return filtersList;
+	}
 
 	public static List<Filter> buildTestngGroupsFilters(List<String> groupsValues) {
 

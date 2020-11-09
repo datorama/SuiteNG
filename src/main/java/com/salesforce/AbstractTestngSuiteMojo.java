@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -87,14 +86,22 @@ public abstract class AbstractTestngSuiteMojo extends AbstractSuiteMojo {
 
 	protected List<Filter> getIncludedFilters() {
 
-		return Stream.concat(FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters()).stream(), FiltersBuilder.buildTestngGroupsFilters(getGroups()).stream())
-				.collect(Collectors.toList());
+		List<Filter> result = new ArrayList<>();
+		Stream.of(FiltersBuilder.buildAnnotationFilters(getIncludedAnnotationFilters()),
+				FiltersBuilder.buildTestngGroupsFilters(getGroups()),
+				FiltersBuilder.buildMethodNameFilters(getIncludedTests())).forEach(result::addAll);
+
+		return result;
 	}
 
 	protected List<Filter> getExcludedFilters() {
 
-		return Stream.concat(FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters()).stream(), FiltersBuilder.buildTestngGroupsFilters(getExcludedGroups()).stream())
-				.collect(Collectors.toList());
+		List<Filter> result = new ArrayList<>();
+		Stream.of(FiltersBuilder.buildAnnotationFilters(getExcludedAnnotationFilters()),
+				FiltersBuilder.buildTestngGroupsFilters(getExcludedGroups()),
+				FiltersBuilder.buildMethodNameFilters(getExcludedTests())).forEach(result::addAll);
+
+		return result;
 	}
 
 }
