@@ -68,6 +68,11 @@ Add dependency in pom file with the configuration:
       The excluded groups to configure in xml file.
       User property: excluded.groups
 
+    excludedTests
+      The list of tests classes\methods to exclude. Examples: 1.
+      org.example.Test 2. org.example.Test#test1
+      User property: excludes
+
     groups
       The included groups to configure in xml file.
       User property: groups
@@ -77,6 +82,11 @@ Add dependency in pom file with the configuration:
       classes / methods. Examples: 1. org.testng.annotations.Test 2.
       org.testng.annotations.Test#groups=sanity
       User property: included.annotation.filters
+
+    includedTests
+      The list of tests classes\methods to include. Examples: 1.
+      org.example.Test 2. org.example.Test#test1
+      User property: includes
 
     isPreserveOrder
       The preserve order to configure in xml file.
@@ -137,7 +147,6 @@ Add dependency in pom file with the configuration:
 ## Notes
 
 * Plugin only supports TestNG framework at this point
-* Project should include dependency of maven-surefire-plugin
 
 ## Contributing
 
