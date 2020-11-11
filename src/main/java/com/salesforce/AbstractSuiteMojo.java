@@ -142,8 +142,9 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	/**
 	 * The list of tests classes\methods to include.
 	 * Examples:
-	 * 1. org.example.Test
+	 * 1. org.example.Test (class name only)
 	 * 2. org.example.Test#test1
+	 * 3. #test1 (method name only)
 	 */
 	@Parameter(property = "includes")
 	private List<String> includedTests;
@@ -151,8 +152,9 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	/**
 	 * The list of tests classes\methods to exclude.
 	 * Examples:
-	 * 1. org.example.Test
+	 * 1. org.example.Test (class name only)
 	 * 2. org.example.Test#test1
+	 * 3. #test1 (method name only)
 	 */
 	@Parameter(property = "excludes")
 	private List<String> excludedTests;

@@ -14,7 +14,7 @@ public class StringsUtils {
 		String methodName = "";
 
 		if (input.contains("#")) {
-			methodName = input.replaceAll(".+\\#|=.+", "");
+			methodName = input.split("#|=")[1];
 		}
 
 		return methodName;

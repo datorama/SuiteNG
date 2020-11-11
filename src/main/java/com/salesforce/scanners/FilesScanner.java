@@ -145,7 +145,14 @@ public class FilesScanner {
 	private boolean isMethodsFilterMatch(Method method, MethodsFilter filter) {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
-		if (StringUtils.equalsIgnoreCase(filter.getClassName(),method.getDeclaringClass().getCanonicalName())) {
+		if (StringUtils.isEmpty(filter.getClassName())) {
+			if (StringUtils.isNotEmpty(filter.getMethodName())) {
+				if(StringUtils.equalsIgnoreCase(filter.getMethodName(),method.getName())) {
+					isMatch.set(true);
+				}
+			}
+		}
+		else if (StringUtils.equalsIgnoreCase(filter.getClassName(),method.getDeclaringClass().getCanonicalName())) {
 			if (StringUtils.isNotEmpty(filter.getMethodName())) {
 				if(StringUtils.equalsIgnoreCase(filter.getMethodName(),method.getName())) {
 					isMatch.set(true);

@@ -60,8 +60,10 @@ Add dependency in pom file with the configuration:
 
     excludedAnnotationFilters
       The list of configurations for excluded annotation filter of the scanned
-      classes / methods. Examples: 1. org.testng.annotations.Test 2.
-      org.testng.annotations.Test#groups=sanity
+      classes\methods. 
+      Examples: 
+      1. org.testng.annotations.Test 
+      2. org.testng.annotations.Test#groups=sanity
       User property: excluded.annotation.filters
 
     excludedGroups
@@ -69,8 +71,11 @@ Add dependency in pom file with the configuration:
       User property: excluded.groups
 
     excludedTests
-      The list of tests classes\methods to exclude. Examples: 1.
-      org.example.Test 2. org.example.Test#test1
+      The list of tests classes\methods to exclude. 
+      Examples: 
+      1. org.example.Test (class name only) 
+      2. org.example.Test#test1 
+      3. #test1 (method name only)
       User property: excludes
 
     groups
@@ -79,13 +84,18 @@ Add dependency in pom file with the configuration:
 
     includedAnnotationFilters
       The list of configurations for included annotation filter of the scanned
-      classes / methods. Examples: 1. org.testng.annotations.Test 2.
-      org.testng.annotations.Test#groups=sanity
+      classes\methods. 
+      Examples: 
+      1. org.testng.annotations.Test 
+      2. org.testng.annotations.Test#groups=sanity
       User property: included.annotation.filters
 
     includedTests
-      The list of tests classes\methods to include. Examples: 1.
-      org.example.Test 2. org.example.Test#test1
+      The list of tests classes\methods to include. 
+      Examples: 
+      1. org.example.Test (class name only) 
+      2. org.example.Test#test1 
+      3. #test1 (method name only)
       User property: includes
 
     isPreserveOrder
