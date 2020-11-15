@@ -140,6 +140,26 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	private List<String> groups;
 
 	/**
+	 * The list of tests classes\methods to include.
+	 * Examples:
+	 * 1. org.example.Test (class name only)
+	 * 2. org.example.Test#test1
+	 * 3. #test1 (method name only)
+	 */
+	@Parameter(property = "includes")
+	private List<String> includedTests;
+
+	/**
+	 * The list of tests classes\methods to exclude.
+	 * Examples:
+	 * 1. org.example.Test (class name only)
+	 * 2. org.example.Test#test1
+	 * 3. #test1 (method name only)
+	 */
+	@Parameter(property = "excludes")
+	private List<String> excludedTests;
+
+	/**
 	 * The list of configurations for included annotation filter of the scanned classes / methods.
 	 * Examples:
 	 * 1. org.testng.annotations.Test
@@ -340,6 +360,23 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	public void setTestCaseId(List testCaseId) {
 		this.testCaseId = testCaseId;
 	}
+
+	public List<String> getIncludedTests() {
+		return includedTests;
+	}
+
+	public void setIncludedTests(List<String> includedTests) {
+		this.includedTests = includedTests;
+	}
+
+	public List<String> getExcludedTests() {
+		return excludedTests;
+	}
+
+	public void setExcludedTests(List<String> excludedTests) {
+		this.excludedTests = excludedTests;
+	}
+
 
 	protected void setPluginClasspath(List<String> additionalClasspathElements) {
 

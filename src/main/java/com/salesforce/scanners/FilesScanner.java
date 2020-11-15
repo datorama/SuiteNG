@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 
 import com.salesforce.filters.AnnotationsFilter;
 import com.salesforce.filters.Filter;
+import com.salesforce.filters.MethodsFilter;
 
 public class FilesScanner {
 
@@ -126,80 +127,12 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (isAnnotationFilterMatch(method, (AnnotationsFilter) filter)) {
+			if (filter.isFilterMatch(method, filter)) {
 				isMatch.set(true);
 			}
 		});
 
 		return isMatch.get();
-	}
-
-	private boolean isAnnotationFilterMatch(Method method, AnnotationsFilter filter) {
-
-		AtomicBoolean isMatch = new AtomicBoolean(false);
-
-		filter.getAnnotationsFilterMap().forEach((expectedAnnotation, expectedAttributes) -> {
-			if (method.isAnnotationPresent(expectedAnnotation)) {
-				if (expectedAttributes.isEmpty()) {
-					isMatch.set(true);
-				} else {
-					isMatch.set(isAttributesMatch(method, expectedAnnotation, expectedAttributes));
-				}
-			}
-		});
-
-		return isMatch.get();
-	}
-
-	private boolean isAttributesMatch(Method method, Class<? extends Annotation> expectedAnnotation, Map<String, String> expectedAttributes) {
-
-		List<Boolean> matches = new LinkedList<>();
-
-		Annotation annotation = method.getAnnotation(expectedAnnotation);
-		Method[] methods = annotation.annotationType().getDeclaredMethods();
-
-		for (Method annotationMethod : methods) {
-			if (isAttributeMethod(annotationMethod)) {
-				try {
-					if (expectedAttributes.containsKey(annotationMethod.getName())) {
-						String expectedValue = expectedAttributes.get(annotationMethod.getName());
-						Object actualValue = annotationMethod.invoke(annotation, new Object[0]);
-
-						if (compareAttributeValue(actualValue, expectedValue)) {
-							matches.add(new Boolean(true));
-						}
-					}
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NullPointerException | ExceptionInInitializerError e) {
-					log.debug(e);
-				}
-			}
-		}
-
-		return (!expectedAttributes.isEmpty() && matches.size() == expectedAttributes.size());
-	}
-
-	private boolean compareAttributeValue(Object actualValue, String expectedValue) {
-
-		if (actualValue instanceof Class) {
-			if (StringUtils.equals(expectedValue, actualValue.toString())) {
-				return true;
-			}
-		} else if (actualValue instanceof String[]) {
-			if (ArrayUtils.contains((String[]) actualValue, expectedValue)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean isAttributeMethod(Method method) {
-		if (method.getParameterTypes().length == 0
-				&& method.getReturnType() != void.class) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	private String convertFileAbsolutePathToClassCanonicalName(String absolutePath, String absolutePathDirsPrefix, String fileExtension) {

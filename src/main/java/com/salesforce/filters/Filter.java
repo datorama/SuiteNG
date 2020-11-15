@@ -6,6 +6,9 @@
  */
 package com.salesforce.filters;
 
+import java.lang.reflect.Method;
+
 public interface Filter {
 
+	boolean isFilterMatch(Method method, Filter filter);
 }
