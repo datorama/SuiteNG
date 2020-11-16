@@ -32,20 +32,19 @@ public class MethodsFilter implements Filter {
 	}
 
 	@Override
-	public boolean isFilterMatch(Method method, Filter filter) {
+	public boolean isFilterMatch(Method method) {
 
 		AtomicBoolean isMatch = new AtomicBoolean(false);
-		MethodsFilter methodsFilter = (MethodsFilter) filter;
 
-		if (StringUtils.isEmpty(methodsFilter.getClassName())) {
-			if (StringUtils.isNotEmpty(methodsFilter.getMethodName())) {
-				if(StringUtils.equalsIgnoreCase(methodsFilter.getMethodName(),method.getName())) {
+		if (StringUtils.isEmpty(this.getClassName())) {
+			if (StringUtils.isNotEmpty(this.getMethodName())) {
+				if(StringUtils.equalsIgnoreCase(this.getMethodName(),method.getName())) {
 					isMatch.set(true);
 				}
 			}
-		} else if (StringUtils.equalsIgnoreCase(methodsFilter.getClassName(),method.getDeclaringClass().getCanonicalName())) {
-			if (StringUtils.isNotEmpty(methodsFilter.getMethodName())) {
-				if(StringUtils.equalsIgnoreCase(methodsFilter.getMethodName(),method.getName())) {
+		} else if (StringUtils.equalsIgnoreCase(this.getClassName(),method.getDeclaringClass().getCanonicalName())) {
+			if (StringUtils.isNotEmpty(this.getMethodName())) {
+				if(StringUtils.equalsIgnoreCase(this.getMethodName(),method.getName())) {
 					isMatch.set(true);
 				}
 			} else { // No method defined by the user in filter --> all methods in class will match

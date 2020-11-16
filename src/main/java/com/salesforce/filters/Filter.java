@@ -10,5 +10,5 @@ import java.lang.reflect.Method;
 
 public interface Filter {
 
-	boolean isFilterMatch(Method method, Filter filter);
+	boolean isFilterMatch(Method method);
 }

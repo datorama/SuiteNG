@@ -127,7 +127,7 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (filter.isFilterMatch(method, filter)) {
+			if (filter.isFilterMatch(method)) {
 				isMatch.set(true);
 			}
 		});
