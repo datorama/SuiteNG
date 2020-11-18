@@ -23,6 +23,7 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import com.salesforce.scanners.DependencyScanner;
 import com.salesforce.scanners.FilesScanner;
 import com.google.common.io.Files;
+import com.salesforce.utils.UserInputValidator;
 
 public abstract class AbstractSuiteMojo extends AbstractMojo {
 
@@ -211,6 +212,7 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	}
 
 	public void setIncludedAnnotationFilters(List<String> includedAnnotationFilters) {
+		UserInputValidator.validateListContainsNoNullElements(includedAnnotationFilters);
 		this.includedAnnotationFilters = includedAnnotationFilters;
 	}
 
@@ -219,34 +221,32 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	}
 
 	public void setExcludedAnnotationFilters(List<String> excludedAnnotationFilters) {
+		UserInputValidator.validateListContainsNoNullElements(excludedAnnotationFilters);
 		this.excludedAnnotationFilters = excludedAnnotationFilters;
 	}
 
 	public String getBasedir() {
-		setBasedir(validatePathEndsWithFileSeparator(basedir));
 		return basedir;
 	}
 
 	public void setBasedir(String basedir) {
-		this.basedir = basedir;
+		this.basedir = UserInputValidator.validatePathEndsWithFileSeparator(basedir);
 	}
 
 	public String getClassesDirectory() {
-		setClassesDirectory(validatePathEndsWithFileSeparator(classesDirectory));
 		return classesDirectory;
 	}
 
 	public void setClassesDirectory(String classesDirectory) {
-		this.classesDirectory = classesDirectory;
+		this.classesDirectory = UserInputValidator.validatePathEndsWithFileSeparator(classesDirectory);
 	}
 
 	public String getTestClassesDirectory() {
-		setTestClassesDirectory(validatePathEndsWithFileSeparator(testClassesDirectory));
 		return testClassesDirectory;
 	}
 
 	public void setTestClassesDirectory(String testClassesDirectory) {
-		this.testClassesDirectory = testClassesDirectory;
+		this.testClassesDirectory = UserInputValidator.validatePathEndsWithFileSeparator(testClassesDirectory);
 	}
 
 	public String getTestsPackageName() {
@@ -329,11 +329,12 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 		isPreserveOrder = preserveOrder;
 	}
 
-	public List getListeners() {
+	public List<String> getListeners() {
 		return listeners;
 	}
 
-	public void setListeners(List listeners) {
+	public void setListeners(List<String> listeners) {
+		UserInputValidator.validateListContainsNoNullElements(listeners);
 		this.listeners = listeners;
 	}
 
@@ -342,6 +343,7 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	}
 
 	public void setExcludedGroups(List<String> excludedGroups) {
+		UserInputValidator.validateListContainsNoNullElements(excludedGroups);
 		this.excludedGroups = excludedGroups;
 	}
 
@@ -350,14 +352,16 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	}
 
 	public void setGroups(List<String> groups) {
+		UserInputValidator.validateListContainsNoNullElements(groups);
 		this.groups = groups;
 	}
 
-	public List getTestCaseId() {
+	public List<String> getTestCaseId() {
 		return testCaseId;
 	}
 
-	public void setTestCaseId(List testCaseId) {
+	public void setTestCaseId(List<String> testCaseId) {
+		UserInputValidator.validateListContainsNoNullElements(testCaseId);
 		this.testCaseId = testCaseId;
 	}
 
@@ -366,6 +370,7 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	}
 
 	public void setIncludedTests(List<String> includedTests) {
+		UserInputValidator.validateListContainsNoNullElements(excludedTests);
 		this.includedTests = includedTests;
 	}
 
@@ -374,6 +379,7 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 	}
 
 	public void setExcludedTests(List<String> excludedTests) {
+		UserInputValidator.validateListContainsNoNullElements(excludedTests);
 		this.excludedTests = excludedTests;
 	}
 
@@ -421,10 +427,6 @@ public abstract class AbstractSuiteMojo extends AbstractMojo {
 		filesScanner = FilesScanner.getInstance();
 		getFilesScanner().init(new URLClassLoader(classRealm.getURLs(), classRealm), getLog());
 		getFilesScanner().scan(getBasedir() + getTestClassesDirectory());
-	}
-
-	private String validatePathEndsWithFileSeparator(String path) {
-		return (path.endsWith(File.separator)) ? path : (path + File.separator);
 	}
 
 }
