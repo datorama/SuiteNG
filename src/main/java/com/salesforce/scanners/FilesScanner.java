@@ -7,8 +7,6 @@
 package com.salesforce.scanners;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -19,17 +17,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.testng.annotations.Test;
 
-import com.salesforce.filters.AnnotationsFilter;
 import com.salesforce.filters.Filter;
-import com.salesforce.filters.MethodsFilter;
 
 public class FilesScanner {
 
@@ -100,17 +95,21 @@ public class FilesScanner {
 
 	public Map<Class<?>, List<Method>> getFilteredResults(List<Filter> includedFilters, List<Filter> excludedFilters) {
 
+		Map<Class<?>, List<Method>> filteredMap = new HashMap<>();
+		AtomicInteger numOfMethodsMatchFilters = new AtomicInteger();
+
 		if (includedFilters.isEmpty() && excludedFilters.isEmpty()) {
 			return scanResultsMap;
 		}
 
-		Map<Class<?>, List<Method>> filteredMap = new HashMap<>();
-
+		log.debug("The list of methods after filters applied:");
 		scanResultsMap.forEach((clazz, methods) -> {
 			List<Method> filteredClassMethods = new LinkedList<>();
 			methods.forEach(method -> {
 				if (isAtLeastOneFilterMatch(method, includedFilters) && !isAtLeastOneFilterMatch(method, excludedFilters)) {
 					filteredClassMethods.add(method);
+					numOfMethodsMatchFilters.getAndIncrement();
+					log.debug(clazz.getCanonicalName() + "#" + method.getName());
 				}
 			});
 			if (!filteredClassMethods.isEmpty()) {
@@ -118,7 +117,9 @@ public class FilesScanner {
 			}
 		});
 
-		log.debug("Number of classes found after filters applied: " + filteredMap.keySet().size());
+		log.info("Total number of classes found after filters applied: " + filteredMap.keySet().size());
+		log.info("Total number of methods found after filters applied: " + numOfMethodsMatchFilters.get());
+
 		return filteredMap;
 	}
 
@@ -127,7 +128,7 @@ public class FilesScanner {
 		AtomicBoolean isMatch = new AtomicBoolean(false);
 
 		filters.forEach(filter -> {
-			if (filter.isFilterMatch(method, filter)) {
+			if (filter.isFilterMatch(method)) {
 				isMatch.set(true);
 			}
 		});
