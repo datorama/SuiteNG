@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.salesforce;
+package com.datorama.oss;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.datorama.oss.filters.Filter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
-import com.salesforce.filters.Filter;
-import com.salesforce.filters.FiltersBuilder;
+import com.datorama.oss.filters.FiltersBuilder;
 
 public abstract class AbstractTestngSuiteMojo extends AbstractSuiteMojo {
 

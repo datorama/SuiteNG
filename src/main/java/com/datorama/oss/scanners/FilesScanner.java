@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.salesforce.scanners;
+package com.datorama.oss.scanners;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 import org.apache.maven.plugin.logging.Log;
 import org.testng.annotations.Test;
 
-import com.salesforce.filters.Filter;
+import com.datorama.oss.filters.Filter;
 
 public class FilesScanner {
 

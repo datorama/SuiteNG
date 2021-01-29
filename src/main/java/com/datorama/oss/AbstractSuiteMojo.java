@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.salesforce;
+package com.datorama.oss;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,16 +14,16 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.datorama.oss.scanners.DependencyScanner;
+import com.datorama.oss.scanners.FilesScanner;
+import com.datorama.oss.utils.UserInputValidator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
-import com.salesforce.scanners.DependencyScanner;
-import com.salesforce.scanners.FilesScanner;
 import com.google.common.io.Files;
-import com.salesforce.utils.UserInputValidator;
 
 public abstract class AbstractSuiteMojo extends AbstractMojo {
 

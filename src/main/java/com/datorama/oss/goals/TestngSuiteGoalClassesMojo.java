@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
-package com.salesforce.goals;
+package com.datorama.oss.goals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlTest;
 
-import com.salesforce.AbstractTestngSuiteMojo;
+import com.datorama.oss.AbstractTestngSuiteMojo;
 
 /**
  * This goal will generate TestNG suite file with classes.
