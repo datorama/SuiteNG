@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite parallel="tests" name="Parallel Tests With Group Filters">
+  <test thread-count="5" parallel="tests" name="com.examples.TestClass1 # test1">
+    <classes>
+      <class name="com.examples.TestClass1">
+        <methods>
+          <include name="test1"/>
+        </methods>
+      </class> <!-- com.examples.TestClass1 -->
+    </classes>
+  </test> <!-- com.examples.TestClass1 # test1 -->
+  <test thread-count="5" parallel="tests" name="com.examples.TestClass2 # test4">
+    <classes>
+      <class name="com.examples.TestClass2">
+        <methods>
+          <include name="test4"/>
+        </methods>
+      </class> <!-- com.examples.TestClass2 -->
+    </classes>
+  </test> <!-- com.examples.TestClass2 # test4 -->
+</suite> <!-- Parallel Tests With Group Filters -->

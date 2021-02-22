@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite parallel="classes" name="Surefire suite" verbose="0">
+    <groups>
+        <run>
+            <include name="api-tests"/>
+        </run>
+    </groups>
+    <test thread-count="5" parallel="classes" name="Surefire test" verbose="0">
+        <method-selectors>
+            <method-selector>
+                <selector-class name="org.apache.maven.surefire.testng.utils.GroupMatcherMethodSelector" priority="9999"/>
+            </method-selector>
+        </method-selectors>
+        <classes>
+            <class name="com.examples.TestClass1"/>
+            <class name="com.examples.TestClass3"/>
+            <class name="com.examples.TestClass2"/>
+        </classes>
+    </test> <!-- Surefire test -->
+</suite> <!-- Surefire suite -->
