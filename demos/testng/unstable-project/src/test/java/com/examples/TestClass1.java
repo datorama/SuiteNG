@@ -1,12 +1,11 @@
 package com.examples;
 
 import org.testng.annotations.Test;
-
 import java.util.logging.Logger;
 
 public class TestClass1 {
 
-    private final static Logger LOGGER = Logger.getLogger(TestClass3.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(TestClass2.class.getName());
 
     @Test(groups = {Groups.API_TESTS})
     public void test1() {

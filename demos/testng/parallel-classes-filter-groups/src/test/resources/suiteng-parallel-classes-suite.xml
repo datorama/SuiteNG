@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite parallel="classes" name="Parallel Classes With Group Filters">
+  <test thread-count="5" parallel="classes" name="default">
+    <classes>
+      <class name="com.examples.TestClass1"/>
+      <class name="com.examples.TestClass2"/>
+    </classes>
+  </test> <!-- default -->
+</suite> <!-- Parallel Classes With Group Filters -->

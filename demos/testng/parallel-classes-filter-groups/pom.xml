@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datorama</groupId>
-    <artifactId>testng-example-1</artifactId>
+    <artifactId>parallel-classes-filter-groups</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -32,10 +32,10 @@
                     <execution>
                         <phase>test-compile</phase>
                         <goals>
-                            <goal>testng-generate-with-tests</goal>
+                            <goal>testng-generate-with-classes</goal>
                         </goals>
                         <configuration>
-                            <suiteName>Parallel Tests With Group Filters</suiteName>
+                            <suiteName>Parallel Classes With Group Filters</suiteName>
                             <suiteRelativePath>src/test/resources/suiteng-parallel-classes-suite.xml</suiteRelativePath>
                             <testsPackageName>com.datorama</testsPackageName>
                             <groups>api-tests</groups>

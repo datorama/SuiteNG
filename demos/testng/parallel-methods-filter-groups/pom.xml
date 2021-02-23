@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datorama</groupId>
-    <artifactId>parallel-tests-filter-groups</artifactId>
+    <artifactId>parallel-methods-filter-groups</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -32,14 +32,14 @@
                     <execution>
                         <phase>test-compile</phase>
                         <goals>
-                            <goal>testng-generate-with-tests</goal>
+                            <goal>testng-generate-with-methods</goal>
                         </goals>
                         <configuration>
-                            <suiteName>Parallel Tests With Group Filters</suiteName>
-                            <suiteRelativePath>src/test/resources/suiteng-parallel-tests-suite.xml</suiteRelativePath>
-                            <testsPackageName>com.examples</testsPackageName>
+                            <suiteName>Parallel Methods With Group Filters</suiteName>
+                            <suiteRelativePath>src/test/resources/suiteng-parallel-methods-suite.xml</suiteRelativePath>
+                            <testsPackageName>com.datorama</testsPackageName>
                             <groups>api-tests</groups>
-                            <parallelMode>tests</parallelMode>
+                            <parallelMode>methods</parallelMode>
                             <threadCount>5</threadCount>
                         </configuration>
                     </execution>
@@ -51,7 +51,7 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <groups>api-tests</groups>
-                    <parallel>tests</parallel>
+                    <parallel>methods</parallel>
                     <threadCount>5</threadCount>
                 </configuration>
             </plugin>

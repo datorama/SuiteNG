@@ -2,17 +2,19 @@ package com.examples;
 
 import org.testng.annotations.Test;
 
+import java.util.logging.Logger;
+
 public class TestClass3 {
 
-    public static final String GLOBAL_NAME = "global_name";
+    private final static Logger LOGGER = Logger.getLogger(TestClass3.class.getName());
 
     @Test(groups = {Groups.UNIT_TESTS})
     public void test5() {
-        System.out.println("Test 5");
+        LOGGER.info("Test 5");
     }
 
     @Test(groups = {Groups.UNIT_TESTS})
     public void test6() {
-        System.out.println("Test 6");
+        LOGGER.info("Test 6");
     }
 }

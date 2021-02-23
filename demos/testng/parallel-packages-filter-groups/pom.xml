@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datorama</groupId>
-    <artifactId>parallel-tests-filter-groups</artifactId>
+    <artifactId>parallel-packages-filter-groups</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -32,28 +32,17 @@
                     <execution>
                         <phase>test-compile</phase>
                         <goals>
-                            <goal>testng-generate-with-tests</goal>
+                            <goal>testng-generate-with-packages</goal>
                         </goals>
                         <configuration>
-                            <suiteName>Parallel Tests With Group Filters</suiteName>
-                            <suiteRelativePath>src/test/resources/suiteng-parallel-tests-suite.xml</suiteRelativePath>
+                            <suiteName>Parallel Packages With Group Filters</suiteName>
+                            <suiteRelativePath>src/test/resources/suiteng-parallel-packages-suite.xml</suiteRelativePath>
                             <testsPackageName>com.examples</testsPackageName>
-                            <groups>api-tests</groups>
-                            <parallelMode>tests</parallelMode>
+                            <parallelMode>classes</parallelMode>
                             <threadCount>5</threadCount>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <groups>api-tests</groups>
-                    <parallel>tests</parallel>
-                    <threadCount>5</threadCount>
-                </configuration>
             </plugin>
         </plugins>
     </build>

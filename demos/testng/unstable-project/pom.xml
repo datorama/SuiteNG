@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datorama</groupId>
-    <artifactId>parallel-tests-filter-groups</artifactId>
+    <artifactId>unstable-project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -53,6 +53,10 @@
                     <groups>api-tests</groups>
                     <parallel>tests</parallel>
                     <threadCount>5</threadCount>
+                    <!-- Uncomment this configuration in order to solve the error -->
+<!--                    <suiteXmlFiles>-->
+<!--                        <suiteXmlFile>src/test/resources/suiteng-parallel-tests-suite.xml</suiteXmlFile>-->
+<!--                    </suiteXmlFiles>-->
                 </configuration>
             </plugin>
         </plugins>

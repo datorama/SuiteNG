@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite parallel="classes" name="Parallel Packages With Group Filters">
+  <test thread-count="5" parallel="classes" name="default">
+    <packages>
+      <package name="com.datorama"/>
+    </packages>
+  </test> <!-- default -->
+</suite> <!-- Parallel Packages With Group Filters -->

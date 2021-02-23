@@ -7,16 +7,16 @@
         <methods>
           <include name="test1"/>
         </methods>
-      </class> <!-- TestClass1 -->
+      </class> <!-- com.examples.TestClass1 -->
     </classes>
-  </test> <!-- TestClass1 # test1 -->
+  </test> <!-- com.examples.TestClass1 # test1 -->
   <test thread-count="5" parallel="tests" name="com.examples.TestClass2 # test4">
     <classes>
       <class name="com.examples.TestClass2">
         <methods>
           <include name="test4"/>
         </methods>
-      </class> <!-- TestClass2 -->
+      </class> <!-- com.examples.TestClass2 -->
     </classes>
-  </test> <!-- TestClass2 # test4 -->
+  </test> <!-- com.examples.TestClass2 # test4 -->
 </suite> <!-- Parallel Tests With Group Filters -->
