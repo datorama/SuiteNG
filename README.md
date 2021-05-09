@@ -1,8 +1,43 @@
 # SuiteNG
 
-This maven plugin provide the ability to dynamically create suite files for automation frameworks.
+The maven plugin provides the ability to dynamically auto-generate suite files for automation frameworks.
 
-This plugin has 5 goals:
+
+## How to Install Plugin 
+
+The plugin is published in GitHub Packages.
+To [install](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#installing-a-package) the plugin follow those steps:
+
+1. Authenticate to GitHub Packages. For more information, see "[Authenticating to GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages)"
+
+2. Add dependency in pom file:
+
+```
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.datorama</groupId>
+        <artifactId>suiteng-maven-plugin</artifactId>
+        <version>X.X.X</version>
+        <configuration>
+          ...
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
+```
+
+3. Install the package.
+```
+$ mvn install
+```
+
+
+## Plugin Goals
 ```
 suiteng:help
   Display help information on suiteng-maven-plugin.
@@ -22,32 +57,8 @@ suiteng:testng-generate-with-tests
   This goal will generate TestNG suite file with included methods.
 ```
 
-## Usage
 
-Add dependency in pom file with the configuration:
-```
-<project>
-  ...
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>com.datorama</groupId>
-        <artifactId>suiteng-maven-plugin</artifactId>
-        <version>X.X.X</version>
-        <configuration>
-          <isPreserveOrder>...</isPreserveOrder>
-          <parallelMode>...</parallelMode>
-          <verbose>...</verbose>
-          ...
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  ...
-</project>
-```
-
-##  Available parameters
+##  Plugin Arguments
 
 ```
     basedir (Default: ${project.basedir}/)
@@ -154,13 +165,16 @@ Add dependency in pom file with the configuration:
 
 ```
 
+
 ## Notes
 
-* Plugin only supports TestNG framework at this point
+* The plugin currently only supports TestNG framework
+
 
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
 
 ## License
 
